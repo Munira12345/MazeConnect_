@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             MazeConnectTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "intialmazeconnect",
+                        name = "connect",
                         modifier = Modifier.padding(innerPadding)
                     )
                     //
@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
