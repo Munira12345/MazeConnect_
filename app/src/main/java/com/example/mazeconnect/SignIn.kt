@@ -84,6 +84,7 @@ fun SignInScreen(onSignIn: (String, String) -> Unit) {
             ) {
                 Text("Don't have an account? ")
                 TextButton(onClick = { /* Navigate to Sign Up */ }) {
+
                     Text("Sign Up")
                 }
             }
