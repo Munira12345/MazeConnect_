@@ -8,6 +8,7 @@ User Profiles: Create a personalized profile to showcase your interests and skil
 Event Registration: Easily register for events and receive updates or reminders.
 Networking Opportunities: Connect with other attendees before and after events to expand your professional network.
 Interactive Map: View events on an interactive map to find nearby opportunities.
+
 Installation
 ### Clone the repository:
 
@@ -30,6 +31,13 @@ Contributions are welcome! If you have suggestions or improvements, please fork 
 MIT
 
 ![WhatsApp Image 2025-01-14 at 18 33 58_bf3cea83](https://github.com/user-attachments/assets/2ddbe631-7deb-498f-ac13-a207abe17b66)
+
+
+
+
+
+![WhatsApp Image 2025-01-14 at 18 36 40_9fb3d8a6](https://github.com/user-attachments/assets/262fdb01-55c0-46bd-8a10-67cc0e4b08ed)
+
 
 Contact
 For questions or feedback, please contact
