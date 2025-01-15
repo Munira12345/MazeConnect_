@@ -1,53 +1,51 @@
 package com.example.mazeconnect
 
-
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             MazeConnectTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "fixing",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    //
-
-
-                }
+                AppNavigator() // Entry point to the app's navigation
             }
         }
     }
 }
 
+@Composable
+fun AppNavigator() {
+    val navController = rememberNavController()
+    NavigationGraph(navController)
+}
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )}
+fun NavigationGraph(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = "sign_up"
+    ) {
+        composable("sign_up") { SignUpScreen(navController) }
+        composable("sign_in") { SignInScreen(navController) }
+       /* composable("event_roles") { EventRoleScreen(navController) }
+        composable("event_seeker_home") { EventSeekerHomePage(navController) }
+        composable("event_list") { EventList(navController) }
+        composable("event_details") { EventDetails(navController, "Sample Event") }
+        composable("event_organizer_home") { OrgHomePage(navController) }
+        composable("create_events") { CreateEvents(navController) }
+        composable("event_management") { EventManagement(navController) }
+        composable("event_metrics") { EventMetrics("Sample Event") }
 
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MazeConnectTheme {
-        Greeting("Android")
+        */
     }
 }
