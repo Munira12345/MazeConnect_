@@ -18,6 +18,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import androidx.compose.ui.graphics.Color
+import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.FirebaseAuthException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,6 +29,9 @@ fun SignUpScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
+
+    var errorMessage by remember { mutableStateOf("") }
+    val firebaseAuth = FirebaseAuth.getInstance()
 
     Scaffold(
         topBar = {
@@ -66,27 +71,69 @@ fun SignUpScreen(navController: NavHostController) {
                 visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { showPassword = !showPassword }) {
-                       Icon(
+                        Icon(
                             imageVector = if (showPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                             contentDescription = if (showPassword) "Hide Password" else "Show Password"
-                      )
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+
+            // error text
+            if (errorMessage.isNotBlank()) {
+                Text(text = errorMessage, color = Color.Red)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+
             Button(
+
                 onClick = {
-                    // Navigate to the SignInScreen after signing up
-                    navController.navigate("sign_in")
+                    if (email.isNotBlank() && password.isNotBlank() && name.isNotBlank()) {
+                        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    // Navigate to SignIn screen
+                                    navController.navigate("sign_in")
+                                } else {
+                                    // Display error message
+                                    val exception = task.exception
+                                    errorMessage = exception?.message ?: "Registration failed"
+                                }
+                            }
+                    } else {
+                        errorMessage = "Please fill all fields"
+                    }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = name.isNotBlank() && email.isNotBlank() && password.isNotBlank()
             ) {
                 Text("Sign Up")
             }
-        }
+            Spacer(modifier = Modifier.height(16.dp))
+            // Already have an account text
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text("Already have an account? ")
+            }
+
+            // Sign In button below the text
+            Button(
+                onClick = {
+                    navController.navigate("sign_in") // Navigate to Sign In screen
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Sign In")
+            }
+                }
     }
 }
 

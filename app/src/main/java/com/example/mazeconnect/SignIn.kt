@@ -19,6 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import androidx.navigation.NavHostController
 import androidx.compose.ui.graphics.Color
+import com.google.firebase.auth.FirebaseAuth
+//import com.google.firebase.auth.FirebaseAuthException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +28,9 @@ fun SignInScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
+
+    var errorMessage by remember { mutableStateOf("") }
+    val firebaseAuth = FirebaseAuth.getInstance()
 
     Scaffold(
         topBar = {
@@ -66,11 +71,30 @@ fun SignInScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
+            // Error message display
+            if (errorMessage.isNotBlank()) {
+                Text(text = errorMessage, color = Color.Red)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
-            Button(
-                onClick = {
-                    // Navigate to home screen or next screen after signing in
-                    navController.navigate("event_seeker_home")
+                Button(
+                 onClick = {
+                        if (email.isNotBlank() && password.isNotBlank()) {
+                            // Firebase sign-in logic
+                            firebaseAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        // Navigate to the home screen after successful sign-in
+                                        navController.navigate("event_roles")
+                                    } else {
+                                        // Display error message if sign-in fails
+                                        val exception = task.exception
+                                        errorMessage = exception?.message ?: "Sign In failed"
+                                    }
+                                }
+                        } else {
+                            errorMessage = "Please fill in all fields"
+                        }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = email.isNotBlank() && password.isNotBlank()
@@ -91,22 +115,25 @@ fun SignInScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
                 Text("Don't have an account? ")
-                TextButton(
-                    onClick = {
-                        // Navigate to Sign Up screen
-                        navController.navigate("sign_up")
-                    }
-                ) {
-                    Text("Sign Up")
-                }
+            }
+            Button(
+                onClick = {
+                    navController.navigate("sign_up") // Navigate to Sign ups                },
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Sign Up")
             }
         }
+        }
     }
-}
+
 
 @Preview(showBackground = true)
 @Composable
