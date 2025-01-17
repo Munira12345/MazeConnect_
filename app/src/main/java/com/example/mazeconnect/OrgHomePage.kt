@@ -14,11 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 
 @Composable
-fun OrgHomePage() {
+fun OrgHomePage(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -66,5 +68,7 @@ fun OrgHomePage() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewOrgHomePage() {
-    OrgHomePage()
-}
+    MazeConnectTheme {
+        val navController = rememberNavController()
+        OrgHomePage(navController)
+}}

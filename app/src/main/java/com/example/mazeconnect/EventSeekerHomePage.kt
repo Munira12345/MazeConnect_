@@ -16,9 +16,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 @Composable
-fun EventSeekerHomePage() {
+fun EventSeekerHomePage(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -89,5 +92,7 @@ fun EventSeekerHomePage() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventSeekerHomePage() {
-    EventSeekerHomePage()
-}
+    MazeConnectTheme {
+        val navController = rememberNavController()
+        EventSeekerHomePage(navController)
+    }}
