@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
-
 //import androidx.compose.ui.tooling.preview.PreviewParameter
 //import androidx.compose.ui.res.fontResource
 import androidx.navigation.compose.rememberNavController

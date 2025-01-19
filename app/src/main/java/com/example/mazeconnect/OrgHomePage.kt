@@ -51,9 +51,9 @@ fun OrgHomePage(navController: NavHostController) {
                 Text("Create New Event", color = Color.White)
             }
 
-            // Button to manage events
+
             Button(
-                onClick = { /* Navigate to Event Management Screen */ },
+                onClick = { /* Event Management Screen */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
