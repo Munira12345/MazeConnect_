@@ -104,6 +104,7 @@ fun saveRoleAndNavigate(
     } else {
         Toast.makeText(context, "User not authenticated!", Toast.LENGTH_SHORT).show()
     }
+
 }
 
 @Preview(showBackground = true)
