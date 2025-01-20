@@ -97,6 +97,7 @@ fun saveRoleAndNavigate(
                 navController.navigate(destination) {
                     popUpTo("event_roles") { inclusive = true }
                 }
+
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Error saving role: ${it.message}", Toast.LENGTH_SHORT).show()
