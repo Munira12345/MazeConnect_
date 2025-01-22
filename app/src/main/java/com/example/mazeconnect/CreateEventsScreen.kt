@@ -73,7 +73,15 @@ fun CreateEvents(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
 
-            //save the event
+            // Image Upload Section (image picker here)
+            Button(
+                onClick = { /* Trigger image picker */ },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            ) {
+                Text("Select Event Image")
+            }
+
+            // Save Event Button
             Button(
                 onClick = { /* Save the event logic */ },
                 modifier = Modifier
