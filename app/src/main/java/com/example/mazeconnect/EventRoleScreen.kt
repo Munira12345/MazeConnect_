@@ -112,6 +112,6 @@ fun saveRoleAndNavigate(
 @Composable
 fun PreviewEventRoleScreen() {
     MazeConnectTheme {
-    val navController = rememberNavController()
-    EventRoleScreen(navController)
-}}
+        val navController = rememberNavController()
+        EventRoleScreen(navController)
+    }}

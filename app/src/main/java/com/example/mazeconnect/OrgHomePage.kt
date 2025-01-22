@@ -42,7 +42,9 @@ fun OrgHomePage(navController: NavHostController) {
 
             // Button to create a new event
             Button(
-                onClick = { /* Navigate to Create Event Screen */ },
+                onClick = {
+                    navController.navigate("create_events")
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -53,7 +55,9 @@ fun OrgHomePage(navController: NavHostController) {
 
 
             Button(
-                onClick = { /* Event Management Screen */ },
+                onClick = {
+                    navController.navigate("event_management")
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)

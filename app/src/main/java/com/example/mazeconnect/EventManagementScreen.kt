@@ -16,9 +16,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 @Composable
-fun EventManagement() {
+fun EventManagement(navController: NavHostController) {
     val events = listOf(
         "Tech Conference",
         "Music Festival",
@@ -71,5 +74,9 @@ fun EventManagementItem(eventName: String) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventManagement() {
-    EventManagement()
+    MazeConnectTheme {
+        val navController = rememberNavController()
+        EventManagement(navController)
+    }
 }
+

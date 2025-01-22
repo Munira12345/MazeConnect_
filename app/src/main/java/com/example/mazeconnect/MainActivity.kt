@@ -56,10 +56,10 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
         composable("event_roles") { EventRoleScreen(navController) }
         composable("event_seeker_home") { EventSeekerHomePage(navController) }
         composable("event_organizer_home") { OrgHomePage(navController) }
+        composable("create_events") { CreateEvents(navController) }
+        composable("event_management") { EventManagement(navController) }
         //composable("event_list") { EventList(navController) }
         //composable("event_details") { EventDetails(navController, "Sample Event") }
-        //composable("create_events") { CreateEvents(navController) }
-        //composable("event_management") { EventManagement(navController) }
         //composable("event_metrics") { EventMetrics("Sample Event") }
 
 

@@ -15,10 +15,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 
 @Composable
-fun CreateEvents() {
+fun CreateEvents(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -87,5 +90,9 @@ fun CreateEvents() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewCreateEvents() {
-    CreateEvents()
+    MazeConnectTheme {
+        val navController = rememberNavController()
+        CreateEvents(navController)
+    }
 }
+
