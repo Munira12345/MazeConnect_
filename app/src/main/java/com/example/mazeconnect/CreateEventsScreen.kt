@@ -1,27 +1,42 @@
 package com.example.mazeconnect
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
-
 
 @Composable
 fun CreateEvents(navController: NavHostController) {
+    var imageUri by remember { mutableStateOf<Uri?>(null) }  // State for image URI
+    var eventName by remember { mutableStateOf("") }         // State for Event Name
+    var eventDate by remember { mutableStateOf("") }         // State for Event Date
+    var eventLocation by remember { mutableStateOf("") }     // State for Event Location
+    var eventDescription by remember { mutableStateOf("") }  // State for Event Description
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            imageUri = uri // Save selected image URI
+        }
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -34,61 +49,86 @@ fun CreateEvents(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Title for the screen
+            // Title
             Text(
                 text = "Create New Event",
-                style = TextStyle(fontSize = 24.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold),
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
             // Event Name Field
-
             TextField(
-                value = "",
-                onValueChange = {},
+                value = eventName,
+                onValueChange = { eventName = it },
                 label = { Text("Event Name") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
 
             // Event Date Field
             TextField(
-                value = "",
-                onValueChange = {},
+                value = eventDate,
+                onValueChange = { eventDate = it },
                 label = { Text("Event Date") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
 
             // Event Location Field
             TextField(
-                value = "",
-                onValueChange = {},
+                value = eventLocation,
+                onValueChange = { eventLocation = it },
                 label = { Text("Event Location") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
 
             // Event Description Field
             TextField(
-                value = "",
-                onValueChange = {},
+                value = eventDescription,
+                onValueChange = { eventDescription = it },
                 label = { Text("Event Description") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             )
 
-            // Image Upload Section (image picker here)
+            // Button to launch image picker
             Button(
-                onClick = { /* Trigger image picker */ },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                onClick = { imagePickerLauncher.launch("image/*") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
             ) {
                 Text("Select Event Image")
             }
 
+            // Display selected image
+            imageUri?.let {
+                Image(
+                    painter = rememberAsyncImagePainter(it),
+                    contentDescription = "Selected Event Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .background(Color.Gray)
+                        .padding(8.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
             // Save Event Button
             Button(
-                onClick = { /* Save the event logic */ },
+                onClick = {
+                    // Logic to save the event to the seekers home page in a card
+                // and in event management list of events for the seeker
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
-                    .background(Color(0xFF1E90FF)) // Blue button
             ) {
                 Text("Save Event", color = Color.White)
             }
@@ -104,4 +144,3 @@ fun PreviewCreateEvents() {
         CreateEvents(navController)
     }
 }
-

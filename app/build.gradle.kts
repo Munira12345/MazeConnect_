@@ -82,6 +82,8 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.1.0")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 
 
 
