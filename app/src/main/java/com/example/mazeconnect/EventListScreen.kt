@@ -1,49 +1,61 @@
-package com.example.mazeconnect
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun EventList() {
-    // Sample list of events
-    val events = listOf("Tech Conference", "Music Festival", "Art Exhibition", "Sports Tournament")
+    // Sample events
+    val events = listOf(
+        "Tech Conference",
+        "Music Festival",
+        "Art Exhibition",
+        "Sports Tournament"
+    )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFD0A9F5)) // Light Purple Color for background
+            .background(Color.Black) // Black background
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             // Title for the screen
             Text(
-                text = "Upcoming Events",
+                text = "Explore Events",
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    fontSize = 24.sp
+                    color = Color.White,
+                    fontSize = 26.sp,
+                    textAlign = TextAlign.Center
                 ),
                 modifier = Modifier
-                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
             )
 
-            // List of events using LazyColumn
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+            // List  events  LazyColumn
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 items(events) { event ->
-                    EventItem(eventName = event)
+                    EventCard(eventName = event)
                 }
             }
         }
@@ -51,15 +63,29 @@ fun EventList() {
 }
 
 @Composable
-fun EventItem(eventName: String) {
-    Button(
-        onClick = { /* Navigate to Event Details */ },
+fun EventCard(eventName: String) {
+    Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(Color(0xFF6A0DAD)) // Dark Purple Color for buttons
+            .fillMaxWidth(0.9f)
+            .height(150.dp),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF6A0DAD)), // Dark Purple shade
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Text(eventName, color = Color.White)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = eventName,
+                style = TextStyle(
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            )
+        }
     }
 }
 
@@ -68,3 +94,4 @@ fun EventItem(eventName: String) {
 fun PreviewEventList() {
     EventList()
 }
+
