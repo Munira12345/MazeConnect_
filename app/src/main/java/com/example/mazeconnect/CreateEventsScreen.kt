@@ -1,6 +1,8 @@
 package com.example.mazeconnect
 
+import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,26 +24,31 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.UUID
 
 @Composable
 fun CreateEvents(navController: NavHostController) {
-    var imageUri by remember { mutableStateOf<Uri?>(null) }  // State for image URI
-    var eventName by remember { mutableStateOf("") }         // State for Event Name
-    var eventDate by remember { mutableStateOf("") }         // State for Event Date
-    var eventLocation by remember { mutableStateOf("") }     // State for Event Location
-    var eventDescription by remember { mutableStateOf("") }  // State for Event Description
+    val context = LocalContext.current
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var eventName by remember { mutableStateOf("") }
+    var eventDate by remember { mutableStateOf("") }
+    var eventLocation by remember { mutableStateOf("") }
+    var eventDescription by remember { mutableStateOf("") }
+    var isUploading by remember { mutableStateOf(false) }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            imageUri = uri // Save selected image URI
-        }
-    )
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        imageUri = uri
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFB0E0E6)) // Light Blue background
+            .background(Color(0xFFB0E0E6))
     ) {
         Column(
             modifier = Modifier
@@ -49,73 +57,58 @@ fun CreateEvents(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Title
             Text(
                 text = "Create New Event",
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            // Event Name Field
+            // Event Name
             TextField(
                 value = eventName,
                 onValueChange = { eventName = it },
                 label = { Text("Event Name") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
 
-            // Event Date Field
+            // Event Date
             TextField(
                 value = eventDate,
                 onValueChange = { eventDate = it },
                 label = { Text("Event Date") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
 
-            // Event Location Field
+            // Event Location
             TextField(
                 value = eventLocation,
                 onValueChange = { eventLocation = it },
                 label = { Text("Event Location") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
 
-            // Event Description Field
+            // Event Description
             TextField(
                 value = eventDescription,
                 onValueChange = { eventDescription = it },
                 label = { Text("Event Description") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             )
 
-            // Button to launch image picker
+            // Image Picker Button
             Button(
                 onClick = { imagePickerLauncher.launch("image/*") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
             ) {
                 Text("Select Event Image")
             }
 
-            // Display selected image
+            // Show Selected Image
             imageUri?.let {
                 Image(
                     painter = rememberAsyncImagePainter(it),
                     contentDescription = "Selected Event Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(Color.Gray)
-                        .padding(8.dp),
+                    modifier = Modifier.fillMaxWidth().height(200.dp).background(Color.Gray).padding(8.dp),
                     contentScale = ContentScale.Crop
                 )
             }
@@ -123,17 +116,93 @@ fun CreateEvents(navController: NavHostController) {
             // Save Event Button
             Button(
                 onClick = {
-                    // Logic to save the event to the seekers home page in a card
-                // and in event management list of events for the seeker
+                    isUploading = true
+                    uploadImageAndSaveEvent(
+                        context,
+                        imageUri,
+                        eventName,
+                        eventDate,
+                        eventLocation,
+                        eventDescription
+                    ) {
+                        isUploading = false
+                    }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                enabled = !isUploading
             ) {
-                Text("Save Event", color = Color.White)
+                Text(if (isUploading) "Saving..." else "Save Event", color = Color.White)
             }
         }
     }
+}
+
+// Function to upload image and save our event details
+fun uploadImageAndSaveEvent(
+    context: Context,
+    imageUri: Uri?,
+    name: String,
+    date: String,
+    location: String,
+    description: String,
+    onComplete: () -> Unit
+) {
+    val firestore = FirebaseFirestore.getInstance()
+    val storage = FirebaseStorage.getInstance().reference
+
+    if (imageUri != null) {
+        val imageRef = storage.child("event_images/${UUID.randomUUID()}.jpg")
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    saveEventToFirestore(
+                        firestore,
+                        name,
+                        date,
+                        location,
+                        description,
+                        downloadUrl.toString()
+                    )
+                    Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
+                    onComplete()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+                onComplete()
+            }
+    } else {
+        saveEventToFirestore(firestore, name, date, location, description, null)
+        Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
+        onComplete()
+    }
+}
+
+// Function to save event data to Fire store
+fun saveEventToFirestore(
+    firestore: FirebaseFirestore,
+    name: String,
+    date: String,
+    location: String,
+    description: String,
+    imageUrl: String?
+) {
+    val event = hashMapOf(
+        "name" to name,
+        "date" to date,
+        "location" to location,
+        "description" to description,
+        "imageUrl" to imageUrl
+    )
+
+    firestore.collection("events")
+        .add(event)
+        .addOnSuccessListener { documentReference ->
+            println("Event added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { e ->
+            println("Error adding event: $e")
+        }
 }
 
 @Preview(showBackground = true)
