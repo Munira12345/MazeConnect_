@@ -35,7 +35,8 @@ Users can see events available
 
 Users can get metrics for the event they posted
 
-![WhatsApp Image 2025-01-31 at 15 09 42_527c30cb](https://github.com/user-attachments/assets/600ac818-3230-4e1e-9288-817ea39a0b4f)
+![WhatsApp Image 2025-01-31 at 15 12 54_6b590a6e](https://github.com/user-attachments/assets/c9b47930-4581-4d3e-8289-076ee649f710)
+
 
 Users can create an event 
 
