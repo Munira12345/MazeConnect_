@@ -2,8 +2,11 @@ package com.example.mazeconnect
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
+//import androidx.compose.foundation.material3.Card
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -11,10 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.Card
+import androidx.compose.material3.ButtonDefaults
 
 @Composable
 fun EventMetrics(eventName: String) {
-
+    // Event Metrics Data
     val registered = 120
     val views = 350
     val comments = 50
@@ -24,7 +31,8 @@ fun EventMetrics(eventName: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFADD8E6)) // Light Blue background
+            .background(Color(0xFFE0F7FA)) // Softer Light Green background
+
     ) {
         Column(
             modifier = Modifier
@@ -35,7 +43,7 @@ fun EventMetrics(eventName: String) {
             // Title for the screen
             Text(
                 text = "Event Metrics for $eventName",
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 28.sp, fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
@@ -49,15 +57,16 @@ fun EventMetrics(eventName: String) {
             // Spacer between metrics and the bottom action button
             Spacer(modifier = Modifier.weight(1f))
 
-            // Button to go back to the Event Management screen
+            // Button to Event Management screen
             Button(
-                onClick = { /* Navigate back to Event Management or another screen */ },
+                onClick = { /* Navigate back to Event Management  */ },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
-                    .background(Color(0xFF1E90FF)) // Blue button
+                    .padding(16.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)) // Purple button
             ) {
-                Text(text = "Back to Event Management", color = Color.White)
+                Text(text = "Back to Event Management", color = Color.White, fontWeight = FontWeight.SemiBold)
             }
         }
     }
@@ -68,9 +77,11 @@ fun MetricCard(title: String, count: Int) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(vertical = 8.dp)
             .background(Color.White),
-       // elevation = CardDefaults.elevation(4.dp)
+        shape = RoundedCornerShape(12.dp), // Rounded corners for modern design
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+       // elevation = 4.dp // Subtle shadow effect for elevation
     ) {
         Column(
             modifier = Modifier
@@ -78,15 +89,17 @@ fun MetricCard(title: String, count: Int) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
+            // Metric title
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Black
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp, fontWeight = FontWeight.Bold),
+                color = Color(0xFF333333) // Darker color for title
             )
+            // Metric count
             Text(
                 text = "$count",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Black,
+                style = MaterialTheme.typography.headlineMedium.copy(fontSize = 36.sp, fontWeight = FontWeight.Bold),
+                color = Color(0xFF6200EE), // Purple color for the count to highlight it
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
