@@ -39,7 +39,7 @@ Users can get metrics for the event they posted
 ![WhatsApp Image 2025-01-31 at 15 12 54_6b590a6e](https://github.com/user-attachments/assets/c9b47930-4581-4d3e-8289-076ee649f710)
 
 
-Users can create an event 
+Event Organizers homepage  
 
 ![WhatsApp Image 2025-02-01 at 12 50 52_b72ed4f4](https://github.com/user-attachments/assets/6fc75d07-64b9-4c6e-bb23-7240f59e52e9)
 
