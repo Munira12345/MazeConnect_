@@ -1,11 +1,13 @@
 package com.example.mazeconnect
 
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,55 +18,124 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
-
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun OrgHomePage(navController: NavHostController) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFADD8E6)) // Light Blue background
-    ) {
-        Column(
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .background(Color(0xFFE0F7FA)) // Softer Light Green background
+                .padding(paddingValues) // Ensures content doesn't overlap with the navigation bar
         ) {
-            // Title for the screen
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Profile Icon on the Top Right
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(onClick = { /* Navigate to profile screen */ }) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "User Profile",
+                            tint = Color.Black
+                        )
+                    }
+                }
+
+                // Horizontal Scrollable Cards (LazyRow)
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    val eventTitles = listOf("Your Events", "Upcoming Events", "Past Events")
+                    items(eventTitles) { title ->
+                        EventsCard(title)
+                    }
+                }
+
+                // Navigation Buttons
+                Button(
+                    onClick = { navController.navigate("create_events") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text("Create New Event", color = Color.White)
+                }
+
+                Button(
+                    onClick = { navController.navigate("event_management") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text("Manage Events", color = Color.White)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EventsCard(title: String) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .width(250.dp) // Fixed width for scrolling effect
+            .height(200.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF1E90FF)), // Blue card background
+            contentAlignment = Alignment.Center
+        ) {
             Text(
-                text = "Event Organizer Dashboard",
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 24.dp)
+                text = title,
+                color = Color.White,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(16.dp)
             )
+        }
+    }
+}
 
-            // Button to create a new event
-            Button(
-                onClick = {
-                    navController.navigate("create_events")
-                          },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-                    .background(Color(0xFF1E90FF)) // Blue button
-            ) {
-                Text("Create New Event", color = Color.White)
-            }
+@Composable
+fun BottomNavigationBar(navController: NavHostController) {
+    NavigationBar(
+        modifier = Modifier.fillMaxWidth(),
+        containerColor = Color(0xFFE0F7FA)
+    ) {
+        val items = listOf(
+            Pair(Icons.Filled.Home, "Home" to "home"),
+            Pair(Icons.Filled.Add, "Create Event" to "create_events"),
+            Pair(Icons.Filled.Settings, "Manage Events" to "event_management"),
+            Pair(Icons.Filled.BarChart, "Metrics" to "event_metrics"),
+            Pair(Icons.Filled.AccountCircle, "Profile" to "user_profile")
+        )
 
-
-            Button(
-                onClick = {
-                    navController.navigate("event_management")
-                          },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-                    .background(Color(0xFF1E90FF)) // Blue button
-            ) {
-                Text("Manage Events", color = Color.White)
-            }
+        items.forEach { (icon, pair) ->
+            NavigationBarItem(
+                icon = { Icon(imageVector = icon, contentDescription = pair.first) },
+                label = { Text(pair.first) },
+                selected = false,
+                onClick = { navController.navigate(pair.second) }
+            )
         }
     }
 }
@@ -75,4 +146,5 @@ fun PreviewOrgHomePage() {
     MazeConnectTheme {
         val navController = rememberNavController()
         OrgHomePage(navController)
-}}
+    }
+}

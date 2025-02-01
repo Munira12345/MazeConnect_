@@ -48,7 +48,8 @@ fun CreateEvents(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFB0E0E6))
+         //   .background(Color(0xFFB0E0E6))
+            .background(Color(0xFFE0F7FA)) // Softer Light Green background
     ) {
         Column(
             modifier = Modifier
