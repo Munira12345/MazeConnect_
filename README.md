@@ -32,7 +32,8 @@ MIT
 
 Users can see events available 
 
-![WhatsApp Image 2025-01-30 at 17 58 01_09d2f9f1](https://github.com/user-attachments/assets/6d61520d-797c-4f7c-9788-3d2ec7190faf)
+![WhatsApp Image 2025-02-01 at 13 53 14_c0895100](https://github.com/user-attachments/assets/23196ba2-d421-4183-b8c1-b50eeaee59ee)
+
 
 Users can get metrics for the event they posted
 
