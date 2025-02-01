@@ -1,5 +1,6 @@
 package com.example.mazeconnect
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
+import com.example.mazeconnect.components.BottomNavigationBar // Import the BottomNavigationBar component
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -50,39 +54,44 @@ fun EventManagement(navController: NavHostController) {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFE0F7FA))
-    ) {
-        Column(
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) } //  Use imported component
+    ) { paddingValues ->
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .background(Color(0xFFE0F7FA))
+                .padding(paddingValues)
         ) {
-            Text(
-                text = "Event Management",
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-
-            if (isLoading) {
-                CircularProgressIndicator()
-            } else if (events.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
-                    text = "No events. Click to create event.",
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { navController.navigate("create_event") }
-                        .padding(16.dp)
+                    text = "Event Management",
+                    style = MaterialTheme.typography.headlineLarge,
+                    modifier = Modifier.padding(bottom = 24.dp)
                 )
-            } else {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(events) { event ->
-                        EventManagementItem(eventName = event.name)
+
+                if (isLoading) {
+                    CircularProgressIndicator()
+                } else if (events.isEmpty()) {
+                    Text(
+                        text = "No events. Click to create event.",
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { navController.navigate("create_event") }
+                            .padding(16.dp)
+                    )
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(events) { event ->
+                            EventManagementItem(eventName = event.name)
+                        }
                     }
                 }
             }
@@ -110,3 +119,4 @@ fun PreviewEventManagement() {
         EventManagement(navController)
     }
 }
+

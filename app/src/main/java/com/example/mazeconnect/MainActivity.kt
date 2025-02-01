@@ -1,5 +1,6 @@
 package com.example.mazeconnect
 
+import EventList
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -58,9 +59,20 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
         composable("event_organizer_home") { OrgHomePage(navController) }
         composable("create_events") { CreateEvents(navController) }
         composable("event_management") { EventManagement(navController) }
-        //composable("event_list") { EventList(navController) }
-        //composable("event_details") { EventDetails(navController, "Sample Event") }
-        //composable("event_metrics") { EventMetrics("Sample Event") }
+        composable("event_details/{eventName}/{eventDescription}/{eventDate}/{eventLocation}/{ticketPrice}") { backStackEntry ->
+            EventDetails(
+                navController,
+                eventName = backStackEntry.arguments?.getString("eventName") ?: "Default Event",
+                eventDescription = backStackEntry.arguments?.getString("eventDescription") ?: "No description",
+                eventDate = backStackEntry.arguments?.getString("eventDate") ?: "No date",
+                eventLocation = backStackEntry.arguments?.getString("eventLocation") ?: "No location",
+                ticketPrice = backStackEntry.arguments?.getString("ticketPrice") ?: "Free"
+            )
+        }
+
+        composable("event_list") { EventList(navController) }
+       // composable("event_details") { EventDetails(navController, "Sample Event") }
+        composable("event_metrics") { EventMetrics("Sample Event") }
 
 
     }

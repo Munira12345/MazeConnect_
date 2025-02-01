@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,21 +20,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import androidx.compose.ui.text.style.TextAlign
+import com.example.mazeconnect.ui.theme.MazeConnectTheme
+import com.example.mazeconnect.components.BottomNavigationBar //  Import the BottomNavigationBar component
 
 @Composable
 fun OrgHomePage(navController: NavHostController) {
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { BottomNavigationBar(navController) } //imported component
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xFFE0F7FA)) // Softer Light Green background
-                .padding(paddingValues) // Ensures content doesn't overlap with the navigation bar
+                .padding(paddingValues)
         ) {
             Column(
                 modifier = Modifier
@@ -40,7 +41,7 @@ fun OrgHomePage(navController: NavHostController) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Profile Icon on the Top Right
+                // Profile Icon Top Right to make functional later
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -56,7 +57,7 @@ fun OrgHomePage(navController: NavHostController) {
                     }
                 }
 
-                // Horizontal Scrollable Cards (LazyRow)
+                // Horizontal Scrollable Cards (LazyRow) for the organizers content
                 LazyRow(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -110,31 +111,6 @@ fun EventsCard(title: String) {
                 color = Color.White,
                 fontSize = 24.sp,
                 modifier = Modifier.padding(16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun BottomNavigationBar(navController: NavHostController) {
-    NavigationBar(
-        modifier = Modifier.fillMaxWidth(),
-        containerColor = Color(0xFFE0F7FA)
-    ) {
-        val items = listOf(
-            Pair(Icons.Filled.Home, "Home" to "home"),
-            Pair(Icons.Filled.Add, "Create Event" to "create_events"),
-            Pair(Icons.Filled.Settings, "Manage Events" to "event_management"),
-            Pair(Icons.Filled.BarChart, "Metrics" to "event_metrics"),
-            Pair(Icons.Filled.AccountCircle, "Profile" to "user_profile")
-        )
-
-        items.forEach { (icon, pair) ->
-            NavigationBarItem(
-                icon = { Icon(imageVector = icon, contentDescription = pair.first) },
-                label = { Text(pair.first) },
-                selected = false,
-                onClick = { navController.navigate(pair.second) }
             )
         }
     }

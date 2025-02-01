@@ -21,9 +21,8 @@ import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.remember
-
 import androidx.compose.ui.res.painterResource
+import com.example.mazeconnect.components.EventSeekerBottomNavigation
 
 @Composable
 fun EventSeekerHomePage(navController: NavHostController) {
@@ -84,20 +83,11 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 }
             }
 
-            Spacer(modifier = Modifier.weight(0.5f))
+            Spacer(modifier = Modifier.weight(1f))
 
-            Button(
-                onClick = { /* Sign Out the User */ },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6A0DAD), // Dark Purple
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Text("Sign Out", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-            }
-        }
+            // Bottom navigation placed at the bottom
+            EventSeekerBottomNavigation(navController)
+                        }
     }
 }
 
@@ -125,4 +115,6 @@ fun PreviewEventSeekerHomePage() {
     MazeConnectTheme {
         val navController = rememberNavController()
         EventSeekerHomePage(navController)
-    }}
+    }
+}
+

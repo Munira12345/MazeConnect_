@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
+import com.example.mazeconnect.components.BottomNavigationBar // BottomNavigationBar component
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
@@ -45,31 +46,31 @@ fun CreateEvents(navController: NavHostController) {
         imageUri = uri
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-         //   .background(Color(0xFFB0E0E6))
-            .background(Color(0xFFE0F7FA)) // Softer Light Green background
-    ) {
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .background(Color(0xFFE0F7FA)) // Soft Light Blue background
+                .padding(16.dp)
+                .padding(bottom = paddingValues.calculateBottomPadding()), // Added padding to avoid overlap
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Create New Event",
                 style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(bottom = 16.dp)
             )
+
+            Spacer(modifier = Modifier.height(8.dp)) // Adjusted spacing
 
             // Event Name
             TextField(
                 value = eventName,
                 onValueChange = { eventName = it },
                 label = { Text("Event Name") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             )
 
             // Event Date
@@ -77,7 +78,7 @@ fun CreateEvents(navController: NavHostController) {
                 value = eventDate,
                 onValueChange = { eventDate = it },
                 label = { Text("Event Date") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             )
 
             // Event Location
@@ -85,7 +86,7 @@ fun CreateEvents(navController: NavHostController) {
                 value = eventLocation,
                 onValueChange = { eventLocation = it },
                 label = { Text("Event Location") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             )
 
             // Event Description
@@ -93,13 +94,13 @@ fun CreateEvents(navController: NavHostController) {
                 value = eventDescription,
                 onValueChange = { eventDescription = it },
                 label = { Text("Event Description") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             )
 
             // Image Picker Button
             Button(
                 onClick = { imagePickerLauncher.launch("image/*") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             ) {
                 Text("Select Event Image")
             }
@@ -109,10 +110,16 @@ fun CreateEvents(navController: NavHostController) {
                 Image(
                     painter = rememberAsyncImagePainter(it),
                     contentDescription = "Selected Event Image",
-                    modifier = Modifier.fillMaxWidth().height(200.dp).background(Color.Gray).padding(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .background(Color.Gray)
+                        .padding(8.dp),
                     contentScale = ContentScale.Crop
                 )
             }
+
+            Spacer(modifier = Modifier.height(8.dp)) // Adjusted spacing
 
             // Save Event Button
             Button(
@@ -129,7 +136,7 @@ fun CreateEvents(navController: NavHostController) {
                         isUploading = false
                     }
                 },
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = !isUploading
             ) {
                 Text(if (isUploading) "Saving..." else "Save Event", color = Color.White)
@@ -179,7 +186,7 @@ fun uploadImageAndSaveEvent(
     }
 }
 
-// Function to save event data to Fire store
+// Function to save event data to Firestore
 fun saveEventToFirestore(
     firestore: FirebaseFirestore,
     name: String,
@@ -214,3 +221,4 @@ fun PreviewCreateEvents() {
         CreateEvents(navController)
     }
 }
+
