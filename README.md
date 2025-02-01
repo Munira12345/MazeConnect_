@@ -29,18 +29,21 @@ Contributions are welcome! If you have suggestions or improvements, please fork 
 
 ### License
 MIT
+
 Users can see events available 
 
-![WhatsApp Image 2025-01-30 at 17 58 01_09d2f9f1](https://github.com/user-attachments/assets/6d61520d-797c-4f7c-9788-3d2ec7190faf)
+![WhatsApp Image 2025-02-01 at 13 53 14_c0895100](https://github.com/user-attachments/assets/23196ba2-d421-4183-b8c1-b50eeaee59ee)
+
 
 Users can get metrics for the event they posted
 
 ![WhatsApp Image 2025-01-31 at 15 12 54_6b590a6e](https://github.com/user-attachments/assets/c9b47930-4581-4d3e-8289-076ee649f710)
 
 
-Users can create an event 
+Event Organizers homepage  
 
-![WhatsApp Image 2025-01-14 at 18 52 51_adf29dd0](https://github.com/user-attachments/assets/91fb2354-f75f-4bb1-88d1-203edd2b2901)
+![WhatsApp Image 2025-02-01 at 12 50 52_b72ed4f4](https://github.com/user-attachments/assets/6fc75d07-64b9-4c6e-bb23-7240f59e52e9)
+
 
 
 
