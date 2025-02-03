@@ -60,7 +60,8 @@ fun EventManagement(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFE0F7FA))
+                //.background(Color(0xFFE0F7FA))
+                .background(Color(0xFF1E90FF))
                 .padding(paddingValues)
         ) {
             Column(
