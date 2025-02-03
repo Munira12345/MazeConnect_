@@ -3,40 +3,39 @@ package com.example.mazeconnect
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.Image
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-//import com.example.mazeconnect.ui.theme.MazeConnectTheme
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.Image
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import coil.compose.rememberAsyncImagePainter
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.ui.res.painterResource
+import com.example.mazeconnect.R
 import com.example.mazeconnect.components.EventSeekerBottomNavigation
+import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 @Composable
 fun EventSeekerHomePage(navController: NavHostController) {
-    var imageUrl by remember { mutableStateOf("") }
+    var profileImageUrl by remember { mutableStateOf("") }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let { imageUrl = it.toString() }
+        uri?.let { profileImageUrl = it.toString() }
     }
 
     Box(
@@ -63,8 +62,23 @@ fun EventSeekerHomePage(navController: NavHostController) {
                         fontWeight = FontWeight.Bold
                     )
                 )
-                Button(onClick = { imagePicker.launch("image/*") }) {
-                    Text("Upload Event Image")
+                IconButton(onClick = { imagePicker.launch("image/*") }) {
+                    if (profileImageUrl.isNotEmpty()) {
+                        Image(
+                            painter = rememberAsyncImagePainter(profileImageUrl),
+                            contentDescription = "User Profile",
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(20.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "User Profile",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
 
@@ -75,13 +89,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 value = "",
                 onValueChange = {},
                 placeholder = { Text("Search...", color = Color.Gray) },
-                trailingIcon = {
-                    Icon(
-                        painter = rememberAsyncImagePainter("https://dummyimage.com/100x100/000/fff"), // Placeholder
-                        contentDescription = "Filter",
-                        tint = Color.White
-                    )
-                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
@@ -89,21 +96,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Uploaded Image Preview
-            if (imageUrl.isNotEmpty()) {
-                Image(
-                    painter = rememberAsyncImagePainter(imageUrl),
-                    contentDescription = "Uploaded Event Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(Color.Gray),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
 
             // Categories
             Row(
@@ -114,25 +106,29 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 CategoryButton("Award", Color(0xFFAB47BC))
                 CategoryButton("Music", Color(0xFF7E57C2))
             }
+            Spacer(modifier = Modifier.weight(1f))
         }
 
-        // Place Bottom Navigation at the Bottom
-        EventSeekerBottomNavigation(navController)
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            EventSeekerBottomNavigation(navController)
+        }
     }
-    }
-
+}
 
 @Composable
 fun CategoryButton(label: String, backgroundColor: Color) {
     Button(
         onClick = {},
-       // colors = ButtonDefaults.buttonColors(backgroundColor = backgroundColor),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier.padding(4.dp)
     ) {
         Text(label, color = Color.White)
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
