@@ -65,36 +65,40 @@ fun CreateEvents(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(8.dp)) // Adjusted spacing
 
-            // Event Name
-            TextField(
+            //name
+            OutlinedTextField(
                 value = eventName,
                 onValueChange = { eventName = it },
                 label = { Text("Event Name") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                singleLine = true
             )
 
             // Event Date
-            TextField(
+            OutlinedTextField(
                 value = eventDate,
                 onValueChange = { eventDate = it },
                 label = { Text("Event Date") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                singleLine = true
             )
 
             // Event Location
-            TextField(
+            OutlinedTextField(
                 value = eventLocation,
                 onValueChange = { eventLocation = it },
                 label = { Text("Event Location") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                singleLine = true
             )
 
             // Event Description
-            TextField(
+            OutlinedTextField(
                 value = eventDescription,
                 onValueChange = { eventDescription = it },
                 label = { Text("Event Description") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                singleLine = true
             )
 
             // Image Picker Button
@@ -119,7 +123,7 @@ fun CreateEvents(navController: NavHostController) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp)) // Adjusted spacing
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Save Event Button
             Button(
