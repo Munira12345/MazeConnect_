@@ -45,6 +45,9 @@ Event Organizers homepage
 ![WhatsApp Image 2025-02-01 at 12 50 52_b72ed4f4](https://github.com/user-attachments/assets/6fc75d07-64b9-4c6e-bb23-7240f59e52e9)
 
 
+users can register for an event/ payment to mpesa feature coming soon! 
+
+![WhatsApp Image 2025-02-01 at 15 08 15_f94fed9b](https://github.com/user-attachments/assets/907ea72e-3eef-4b0e-911f-eb985f005cc2)
 
 
 
