@@ -32,22 +32,27 @@ MIT
 
 Users can see events available 
 
-![WhatsApp Image 2025-02-01 at 13 53 14_c0895100](https://github.com/user-attachments/assets/23196ba2-d421-4183-b8c1-b50eeaee59ee)
+
+![WhatsApp Image 2025-02-03 at 16 13 59_0ae9caab](https://github.com/user-attachments/assets/7921b5b8-34de-445a-b337-f434726c25e9)
 
 
 Users can get metrics for the event they posted
+
 
 ![WhatsApp Image 2025-01-31 at 15 12 54_6b590a6e](https://github.com/user-attachments/assets/c9b47930-4581-4d3e-8289-076ee649f710)
 
 
 Event Organizers homepage  
 
+
 ![WhatsApp Image 2025-02-01 at 12 50 52_b72ed4f4](https://github.com/user-attachments/assets/6fc75d07-64b9-4c6e-bb23-7240f59e52e9)
 
 
 users can register for an event/ payment to mpesa feature coming soon! 
 
+
 ![WhatsApp Image 2025-02-01 at 15 08 15_f94fed9b](https://github.com/user-attachments/assets/907ea72e-3eef-4b0e-911f-eb985f005cc2)
+
 
 
 
