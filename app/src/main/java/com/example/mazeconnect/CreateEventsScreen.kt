@@ -49,6 +49,7 @@ fun CreateEvents(navController: NavHostController) {
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

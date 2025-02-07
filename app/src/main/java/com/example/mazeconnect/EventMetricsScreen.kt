@@ -18,9 +18,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.Card
 import androidx.compose.material3.ButtonDefaults
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 @Composable
-fun EventMetrics(eventName: String) {
+fun EventMetrics(eventName: String, navController: NavHostController) {
     // Event Metrics Data
     val registered = 120
     val views = 350
@@ -59,7 +62,7 @@ fun EventMetrics(eventName: String) {
 
             // Button to Event Management screen
             Button(
-                onClick = { /* Navigate back to Event Management  */ },
+                onClick =  { navController.navigate("event_management") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -106,8 +109,14 @@ fun MetricCard(title: String, count: Int) {
     }
 }
 
+  //  EventMetrics(eventName = "Tech Conference")
+
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventMetrics() {
-    EventMetrics(eventName = "Tech Conference")
+    MazeConnectTheme {
+        val navController = rememberNavController()
+        EventMetrics(eventName = "Tech Conference", navController = navController)
+    }
 }

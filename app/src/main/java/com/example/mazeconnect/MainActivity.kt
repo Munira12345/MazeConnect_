@@ -72,7 +72,9 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
 
         composable("event_list") { EventList(navController) }
        // composable("event_details") { EventDetails(navController, "Sample Event") }
-        composable("event_metrics") { EventMetrics("Sample Event") }
+       // composable("event_metrics") { EventMetrics("Sample Event") }
+        composable("event_metrics") {EventMetrics("Sample Event", navController)
+        }
 
 
     }

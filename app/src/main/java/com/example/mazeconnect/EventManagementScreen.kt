@@ -26,6 +26,7 @@ import com.example.mazeconnect.components.BottomNavigationBar // Import the Bott
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
+
 data class Event(
     val id: String = "",
     val name: String = "",
@@ -61,7 +62,8 @@ fun EventManagement(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 //.background(Color(0xFFE0F7FA))
-                .background(Color(0xFF1E90FF))
+                .background(Color(0xFFE0F7FA))
+               // .background(Color(0xFF1E90FF))
                 .padding(paddingValues)
         ) {
             Column(
@@ -81,7 +83,7 @@ fun EventManagement(navController: NavHostController) {
                 } else if (events.isEmpty()) {
                     Text(
                         text = "No events. Click to create event.",
-                        color = Color.Gray,
+                        color = Color.Black,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
