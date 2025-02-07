@@ -95,7 +95,7 @@ fun EventsCard(title: String) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .width(250.dp) // Fixed width for scrolling effect
+            .width(250.dp)
             .height(200.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
