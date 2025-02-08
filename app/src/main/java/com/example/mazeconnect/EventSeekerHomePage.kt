@@ -85,7 +85,7 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 onValueChange = {},
                 placeholder = { Text("Search...", color = Color.Gray) },
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)  // Make search bar smaller
+                    .fillMaxWidth(0.8f) // Make search bar smaller
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.DarkGray),
                 trailingIcon = {
@@ -106,8 +106,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
                     .align(Alignment.CenterHorizontally)
             )
 
-
-            // Spacer to give some space between "Explore events" text and categories
             Spacer(modifier = Modifier.height(16.dp))
 
             // Categories
@@ -120,20 +118,19 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 CategoryButton("Music", Color(0xFF7E57C2))
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Event List
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 items(events) { event ->
                     EventCard(event)
                 }
             }
         }
-            // Event List
-            LazyColumn {
-                items(events) { event ->
-                    EventCard(event)
-                }
-            }
 
+        // Top-right Profile Icon
         IconButton(
             onClick = { imagePicker.launch("image/*") },
             modifier = Modifier
@@ -154,10 +151,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-
         // Bottom Navigation
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -167,7 +160,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
         }
     }
 }
-
 
 @Composable
 fun EventCard(event: EventData) {

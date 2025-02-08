@@ -20,6 +20,7 @@ import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import androidx.compose.ui.graphics.Color
 import com.google.firebase.auth.FirebaseAuth
 //import com.google.firebase.auth.FirebaseAuthException
+import androidx.compose.foundation.background
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,11 +128,12 @@ fun SignUpScreen(navController: NavHostController) {
             // Sign In button below the text
             Button(
                 onClick = {
-                    navController.navigate("sign_in") // Navigate to Sign In screen
+                    navController.navigate("sign_in")
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor  = Color.Black)
             ) {
-                Text("Sign In")
+                Text("Sign In", color = Color.White)
             }
                 }
     }

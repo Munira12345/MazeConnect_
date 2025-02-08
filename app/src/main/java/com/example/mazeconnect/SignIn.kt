@@ -125,10 +125,12 @@ fun SignInScreen(navController: NavHostController) {
             Button(
                 onClick = {
                     navController.navigate("sign_up") // Navigate to Sign ups                },
+
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor  = Color.Black)
             ) {
-                Text("Sign Up")
+                Text("Sign Up", color = Color.White)
             }
         }
         }

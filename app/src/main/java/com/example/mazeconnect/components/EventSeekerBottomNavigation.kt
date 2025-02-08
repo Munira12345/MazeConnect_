@@ -19,7 +19,7 @@ fun EventSeekerBottomNavigation(navController: NavHostController) {
         val items = listOf(
             Pair(Icons.Filled.Home, "Home" to "event_seeker_home"),
             Pair(Icons.Filled.List, "Events" to "event_list"),
-            Pair(Icons.Filled.AccountCircle, "Profile" to "event_management")
+            Pair(Icons.Filled.AccountCircle, "Profile" to "user_profile")
         )
 
         items.forEach { (icon, pair) ->
