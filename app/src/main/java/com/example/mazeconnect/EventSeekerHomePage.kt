@@ -67,11 +67,13 @@ fun EventSeekerHomePage(navController: NavHostController) {
             .addOnFailureListener { e -> Log.e("Firestore", "Error fetching events", e) }
     }
 
+    Spacer(modifier = Modifier.height(16.dp))
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
+
         // Main content
         Column(
             modifier = Modifier
@@ -85,7 +87,7 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 onValueChange = {},
                 placeholder = { Text("Search...", color = Color.Gray) },
                 modifier = Modifier
-                    .fillMaxWidth(0.8f) // Make search bar smaller
+                    .fillMaxWidth(0.85f)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.DarkGray),
                 trailingIcon = {
@@ -136,6 +138,7 @@ fun EventSeekerHomePage(navController: NavHostController) {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(16.dp)
+              //  .padding(top = 56.dp, end = 16.dp)
         ) {
             if (profileImageUrl.isNotEmpty()) {
                 Image(
