@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 }
 @Composable
 fun AppNavigator() {
-    val context = LocalContext.current // Correct way to access context in a Composable
+    val context = LocalContext.current
     val role = remember {
         SharedPrefsUtils.getRole(context) // Fetching role using the context
     }
@@ -49,9 +49,12 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
         startDestination = when (role) {
             "EventSeeker" -> "event_seeker_home"
             "EventOrganizer" -> "event_organizer_home"
-            else -> "sign_up" // Default start screen
+            else -> "splash_screen" // default screen
         }
     ) {
+        composable("splash_screen") {
+            SplashScreen(navController = navController)
+        }
         composable("sign_up") { SignUpScreen(navController) }
         composable("sign_in") { SignInScreen(navController) }
         composable("event_roles") { EventRoleScreen(navController) }
