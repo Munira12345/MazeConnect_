@@ -2,6 +2,8 @@
 ## MazeConnect
 MazeConnect is a mobile application designed to connect tech enthusiasts in Kenya with exciting events happening around them. Whether you're looking for workshops, meetups, or networking opportunities, MazeConnect makes it easy to discover and join events in your area.
 
+Maze connect is a work in progress as it is on its way to be published on playstore, it is always under development and improvement.
+
 ### Features
 Event Discovery: Browse a curated list of tech-related events happening across Kenya.
 User Profiles: Create a personalized profile to showcase your interests and skills.
