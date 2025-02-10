@@ -226,4 +226,3 @@ fun PreviewCreateEvents() {
         CreateEvents(navController)
     }
 }
-

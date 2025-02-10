@@ -49,7 +49,7 @@ fun EventSeekerHomePage(navController: NavHostController) {
 
     val events = remember { mutableStateListOf<EventData>() }
 
-    // Fetch events from Firestore
+
     LaunchedEffect(Unit) {
         FirebaseFirestore.getInstance().collection("events")
             .get()

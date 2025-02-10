@@ -12,6 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,10 +24,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.text.style.TextAlign
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.SubcomposeAsyncImage
 import com.example.mazeconnect.components.BottomNavigationBar //  Import the BottomNavigationBar component
-
 @Composable
 fun OrgHomePage(navController: NavHostController) {
+    // Declare the state to hold the image URL
+    val profileImageUrl = remember { mutableStateOf("") }
+
+    // Initialize the image picker launcher
+    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let { profileImageUrl.value = it.toString() }
+    }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) } //imported component
     ) { paddingValues ->
@@ -41,19 +54,31 @@ fun OrgHomePage(navController: NavHostController) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Profile Icon Top Right to make functional later
+                // Profile Icon Top Right - Implementing image picker here
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    IconButton(onClick = { /* Navigate to profile screen */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.AccountCircle,
-                            contentDescription = "User Profile",
-                            tint = Color.Black
-                        )
+                    // When clicked, launch the image picker
+                    IconButton(onClick = { imagePicker.launch("image/*") }) {
+                        if (profileImageUrl.value.isEmpty()) {
+                            // Default account icon if no profile image is picked
+                            Icon(
+                                imageVector = Icons.Filled.AccountCircle,
+                                contentDescription = "User Profile",
+                                tint = Color.Black
+                            )
+                        } else {
+                            // Display picked profile image
+                            SubcomposeAsyncImage(
+                                model = profileImageUrl.value,
+                                contentDescription = "User Profile",
+                                modifier = Modifier.size(40.dp), // Adjust size as necessary
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     }
                 }
 
@@ -89,6 +114,8 @@ fun OrgHomePage(navController: NavHostController) {
         }
     }
 }
+
+
 
 @Composable
 fun EventsCard(title: String) {
