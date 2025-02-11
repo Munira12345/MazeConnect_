@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import com.example.mazeconnect.components.BottomNavigationBar // Import the BottomNavigationBar component
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
 
 
@@ -36,17 +36,21 @@ data class Event(
     val imageUrl: String? = null
 )
 
+
 @Composable
 fun EventManagement(navController: NavHostController) {
-    val firestore = FirebaseFirestore.getInstance()
+    val database = FirebaseDatabase.getInstance().reference
     var events by remember { mutableStateOf<List<Event>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         try {
-            val snapshot = firestore.collection("events").get().await()
-            events = snapshot.documents.mapNotNull { doc ->
-                doc.toObject(Event::class.java)?.copy(id = doc.id)
+            // Fetch events from Realtime Database
+            val snapshot = database.child("events").get().await()
+
+            // Map the snapshot to a list of Event objects
+            events = snapshot.children.mapNotNull { child ->
+                child.getValue(Event::class.java)?.copy(id = child.key ?: "")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -56,14 +60,12 @@ fun EventManagement(navController: NavHostController) {
     }
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) } //  Use imported component
+        bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                //.background(Color(0xFFE0F7FA))
                 .background(Color(0xFFE0F7FA))
-               // .background(Color(0xFF1E90FF))
                 .padding(paddingValues)
         ) {
             Column(
@@ -101,6 +103,7 @@ fun EventManagement(navController: NavHostController) {
         }
     }
 }
+
 
 @Composable
 fun EventManagementItem(eventName: String) {

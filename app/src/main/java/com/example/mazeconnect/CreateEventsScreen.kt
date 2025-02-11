@@ -2,6 +2,7 @@ package com.example.mazeconnect
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,9 +26,10 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import com.example.mazeconnect.components.BottomNavigationBar // BottomNavigationBar component
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
+
 
 @Composable
 fun CreateEvents(navController: NavHostController) {
@@ -66,7 +68,7 @@ fun CreateEvents(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(8.dp)) // Adjusted spacing
 
-            //name
+            // Name, Date, Location, Description inputs...
             OutlinedTextField(
                 value = eventName,
                 onValueChange = { eventName = it },
@@ -75,7 +77,6 @@ fun CreateEvents(navController: NavHostController) {
                 singleLine = true
             )
 
-            // Event Date
             OutlinedTextField(
                 value = eventDate,
                 onValueChange = { eventDate = it },
@@ -84,7 +85,6 @@ fun CreateEvents(navController: NavHostController) {
                 singleLine = true
             )
 
-            // Event Location
             OutlinedTextField(
                 value = eventLocation,
                 onValueChange = { eventLocation = it },
@@ -93,7 +93,6 @@ fun CreateEvents(navController: NavHostController) {
                 singleLine = true
             )
 
-            // Event Description
             OutlinedTextField(
                 value = eventDescription,
                 onValueChange = { eventDescription = it },
@@ -123,6 +122,7 @@ fun CreateEvents(navController: NavHostController) {
                     contentScale = ContentScale.Crop
                 )
             }
+            Log.d("EventUpload", "Image URI: $imageUri")
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -150,7 +150,9 @@ fun CreateEvents(navController: NavHostController) {
     }
 }
 
-// Function to upload image and save our event details
+//to add this to check if user is logged in later
+// val currentUser = FirebaseAuth.getInstance().currentUser
+//if (currentUser != null) {
 fun uploadImageAndSaveEvent(
     context: Context,
     imageUri: Uri?,
@@ -160,7 +162,6 @@ fun uploadImageAndSaveEvent(
     description: String,
     onComplete: () -> Unit
 ) {
-    val firestore = FirebaseFirestore.getInstance()
     val storage = FirebaseStorage.getInstance().reference
 
     if (imageUri != null) {
@@ -168,8 +169,7 @@ fun uploadImageAndSaveEvent(
         imageRef.putFile(imageUri)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    saveEventToFirestore(
-                        firestore,
+                    saveEventToRealtimeDatabase(
                         name,
                         date,
                         location,
@@ -180,26 +180,30 @@ fun uploadImageAndSaveEvent(
                     onComplete()
                 }
             }
-            .addOnFailureListener {
-                Toast.makeText(context, "Image upload failed", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { exception ->
+                Toast.makeText(context, "Image upload failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+                Log.e("EventUpload", "Error: ${exception.message}")
                 onComplete()
             }
-    } else {
-        saveEventToFirestore(firestore, name, date, location, description, null)
+    }
+    else {
+        saveEventToRealtimeDatabase(name, date, location, description, null)
         Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
         onComplete()
     }
 }
 
-// Function to save event data to Firestore
-fun saveEventToFirestore(
-    firestore: FirebaseFirestore,
+// Function to save our events data to Firebase Realtime Database
+fun saveEventToRealtimeDatabase(
     name: String,
     date: String,
     location: String,
     description: String,
     imageUrl: String?
 ) {
+    val database = FirebaseDatabase.getInstance().reference
+
+    val eventId = database.child("events").push().key // Generate unique event ID
     val event = hashMapOf(
         "name" to name,
         "date" to date,
@@ -208,14 +212,16 @@ fun saveEventToFirestore(
         "imageUrl" to imageUrl
     )
 
-    firestore.collection("events")
-        .add(event)
-        .addOnSuccessListener { documentReference ->
-            println("Event added with ID: ${documentReference.id}")
-        }
-        .addOnFailureListener { e ->
-            println("Error adding event: $e")
-        }
+    // Save event data in the "events" node under a new unique eventId
+    eventId?.let {
+        database.child("events").child(it).setValue(event)
+            .addOnSuccessListener {
+                println("Event added with ID: $it")
+            }
+            .addOnFailureListener { e ->
+                println("Error adding event: $e")
+            }
+    }
 }
 
 @Preview(showBackground = true)

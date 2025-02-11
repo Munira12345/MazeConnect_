@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 fun signOutUser(navController: NavController, onSignOutComplete: () -> Unit) {
     FirebaseAuth.getInstance().signOut()
-    navController.navigate("sign_up")
+    navController.navigate("splash_screen")
     onSignOutComplete()
 }
 

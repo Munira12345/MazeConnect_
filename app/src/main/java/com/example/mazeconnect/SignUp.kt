@@ -36,7 +36,9 @@ fun SignUpScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Sign Up") })
+            CenterAlignedTopAppBar(
+                title = { Text("Sign Up") }
+            )
         }
     ) { paddingValues ->
         Column(

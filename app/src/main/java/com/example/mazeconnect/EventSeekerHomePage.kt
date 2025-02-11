@@ -32,14 +32,16 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Search
-import com.google.firebase.firestore.FirebaseFirestore
-
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 
 data class EventData(
     val id: String = "",
     val name: String = "",
     val imageUrl: String = ""
 )
+
 @Composable
 fun EventSeekerHomePage(navController: NavHostController) {
     var profileImageUrl by remember { mutableStateOf("") }
@@ -49,22 +51,20 @@ fun EventSeekerHomePage(navController: NavHostController) {
 
     val events = remember { mutableStateListOf<EventData>() }
 
-
+    // Fetch events from Firebase Realtime Database
+    val database: DatabaseReference = FirebaseDatabase.getInstance().reference.child("events")
     LaunchedEffect(Unit) {
-        FirebaseFirestore.getInstance().collection("events")
-            .get()
-            .addOnSuccessListener { result ->
-                events.clear()
-                for (document in result) {
-                    val event = EventData(
-                        id = document.id,
-                        name = document.getString("name") ?: "Untitled",
-                        imageUrl = document.getString("imageUrl") ?: ""
-                    )
-                    events.add(event)
+        database.get().addOnSuccessListener { snapshot ->
+            events.clear()
+            snapshot.children.forEach { childSnapshot ->
+                val event = childSnapshot.getValue<EventData>()
+                event?.let {
+                    events.add(it)
                 }
             }
-            .addOnFailureListener { e -> Log.e("Firestore", "Error fetching events", e) }
+        }.addOnFailureListener { e ->
+            Log.e("RealtimeDB", "Error fetching events", e)
+        }
     }
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -73,7 +73,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
             .fillMaxSize()
             .background(Color.Black)
     ) {
-
         // Main content
         Column(
             modifier = Modifier
@@ -138,7 +137,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(16.dp)
-              //  .padding(top = 56.dp, end = 16.dp)
         ) {
             if (profileImageUrl.isNotEmpty()) {
                 Image(
@@ -206,7 +204,6 @@ fun CategoryButton(label: String, backgroundColor: Color) {
         Text(label, color = Color.White)
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
