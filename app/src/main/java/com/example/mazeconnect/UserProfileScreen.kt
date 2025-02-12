@@ -31,10 +31,16 @@ fun signOutUser(navController: NavController, onSignOutComplete: () -> Unit) {
 
 @Composable
 fun UserProfileScreen(
-    userName: String,
-    userEmail: String,
-    navController: NavController
+    navController: NavController,
+    userName: String? = null,
+    userEmail: String? = null
 ) {
+    val firebaseAuth = FirebaseAuth.getInstance()
+    val user = firebaseAuth.currentUser
+
+    val displayName = userName ?: user?.displayName ?: "User"
+    val email = userEmail ?: user?.email ?: "No Email"
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -59,7 +65,7 @@ fun UserProfileScreen(
 
         // User Name
         Text(
-            text = userName,
+            text = displayName,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
@@ -69,7 +75,7 @@ fun UserProfileScreen(
 
         // User Email
         Text(
-            text = userEmail,
+            text = email,
             fontSize = 16.sp,
             color = Color.Gray
         )
@@ -93,8 +99,8 @@ fun UserProfileScreen(
 fun PreviewUserProfileScreen() {
     val navController = rememberNavController()
     UserProfileScreen(
+        navController = navController,
         userName = "Jane Doe",
-        userEmail = "jane.doe@example.com",
-        navController = navController
+        userEmail = "jane.doe@example.com"
     )
 }

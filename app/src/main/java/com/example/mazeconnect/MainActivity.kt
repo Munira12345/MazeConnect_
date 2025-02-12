@@ -78,10 +78,8 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
        // composable("event_metrics") { EventMetrics("Sample Event") }
         composable("event_metrics") {EventMetrics("Sample Event", navController)   }
         composable("user_profile") {
-            UserProfileScreen(
-                userName = "Jane Doe",
-                userEmail = "jane.doe@example.com",
-                navController = navController    )}
+            UserProfileScreen(navController = navController)
+        }
 
 
         }
