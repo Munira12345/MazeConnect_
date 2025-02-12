@@ -23,35 +23,29 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import coil.compose.rememberImagePainter
-import java.util.UUID
 import com.example.mazeconnect.components.BottomNavigationBar // Import the BottomNavigationBar component
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.ui.platform.LocalContext
+import com.example.mazeconnect.PREFS_NAME
+import com.example.mazeconnect.ORG_PROFILE_PIC_URI_KEY
+
 
 @Composable
 fun OrgHomePage(navController: NavHostController) {
     val user = FirebaseAuth.getInstance().currentUser
-    val profileImageUrl = remember { mutableStateOf("") }
     val db = FirebaseFirestore.getInstance()
-    val storage = FirebaseStorage.getInstance()
     val userId = user?.uid ?: ""  // Get the current user's UID
 
-    // Initialize the image picker launcher
-    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            uploadImageToFirebaseStorage(it, userId) { imageUrl ->
-                if (imageUrl != null) {
-                    saveProfileImageUrlToFirestore(imageUrl, userId)
-                    profileImageUrl.value = imageUrl
-                }
-            }
-        }
-    }
+    // Load the saved profile image URL from SharedPreferences using ProfilePicSharedPrefs
+    val context = LocalContext.current
+    val savedProfileImageUrl = ProfilePicSharedPrefs.getProfilePicUri(context)
 
     // Fetch events from Firestore
     val events = remember { mutableStateListOf<String>() }
@@ -76,7 +70,7 @@ fun OrgHomePage(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFE0F7FA)) // Softer Light Green background
+                .background(Color(0xFFE0F7FA))
                 .padding(paddingValues)
         ) {
             Column(
@@ -85,16 +79,16 @@ fun OrgHomePage(navController: NavHostController) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Profile Icon Top Right - Implementing image picker here
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    IconButton(onClick = { imagePicker.launch("image/*") }) {
-                        if (profileImageUrl.value.isEmpty()) {
-                            // Default account icon if no profile image is picked
+                    IconButton(onClick = { /* O */ }) {
+                        if (savedProfileImageUrl.isNullOrEmpty()) {
+
                             Icon(
                                 imageVector = Icons.Filled.AccountCircle,
                                 contentDescription = "User Profile",
@@ -103,7 +97,7 @@ fun OrgHomePage(navController: NavHostController) {
                         } else {
                             // Display picked profile image
                             Image(
-                                painter = rememberAsyncImagePainter(profileImageUrl.value),
+                                painter = rememberAsyncImagePainter(savedProfileImageUrl),
                                 contentDescription = "User Profile",
                                 modifier = Modifier.size(40.dp)
                             )
@@ -148,35 +142,10 @@ fun OrgHomePage(navController: NavHostController) {
     }
 }
 
-// Function to upload the image to Firebase Storage
-fun uploadImageToFirebaseStorage(uri: Uri, userId: String, onSuccess: (String?) -> Unit) {
-    val storageRef = FirebaseStorage.getInstance().reference
-    val fileName = UUID.randomUUID().toString()
-    val profileImageRef = storageRef.child("profile_images/$userId/$fileName")
 
-    profileImageRef.putFile(uri)
-        .addOnSuccessListener {
-            profileImageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                onSuccess(downloadUrl.toString())
-            }
-        }
-        .addOnFailureListener {
-            onSuccess(null)
-        }
-}
 
-// Function to save the image URL to Firestore
-fun saveProfileImageUrlToFirestore(imageUrl: String, userId: String) {
-    val db = FirebaseFirestore.getInstance()
-    val userRef = db.collection("users").document(userId)
-
-    userRef.update("profileImageUrl", imageUrl)
-        .addOnSuccessListener {
-            // Image URL updated successfully
-        }
-        .addOnFailureListener {
-            // Handle error
-        }
+fun loadOrgProfilePicUri(sharedPreferences: SharedPreferences): String? {
+    return sharedPreferences.getString(ORG_PROFILE_PIC_URI_KEY, null)
 }
 
 @Composable

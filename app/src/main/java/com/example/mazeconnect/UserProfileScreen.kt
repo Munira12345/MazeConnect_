@@ -22,6 +22,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
+import android.content.Context
+import android.content.SharedPreferences
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.rememberAsyncImagePainter
+import com.example.mazeconnect.PREFS_NAME
+import com.example.mazeconnect.ORG_PROFILE_PIC_URI_KEY
+
+
 
 fun signOutUser(navController: NavController, onSignOutComplete: () -> Unit) {
     FirebaseAuth.getInstance().signOut()
@@ -35,6 +48,21 @@ fun UserProfileScreen(
     userName: String? = null,
     userEmail: String? = null
 ) {
+    val context = LocalContext.current
+    // Load saved profile picture URI using new shared preferences
+    var profilePicUri by remember { mutableStateOf(ProfilePicSharedPrefs.getProfilePicUri(context)) }
+
+    // Image picker
+    val pickImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            profilePicUri = it.toString()
+            // Save URI persistently using new shared preferences
+            ProfilePicSharedPrefs.saveProfilePicUri(context, it.toString())
+        }
+    }
+
     val firebaseAuth = FirebaseAuth.getInstance()
     val user = firebaseAuth.currentUser
 
@@ -50,16 +78,27 @@ fun UserProfileScreen(
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Profile Picture Icon
-        Icon(
-            imageVector = Icons.Default.AccountCircle,
-            contentDescription = "Profile Picture",
-            tint = Color.Gray,
-            modifier = Modifier
-                .size(120.dp)
-                .clip(CircleShape)
-                .clickable { /* Handle profile settings click later */ }
-        )
+        // Profile Picture
+        if (profilePicUri.isNullOrEmpty()) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "Profile Picture",
+                tint = Color.Gray,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .clickable { pickImageLauncher.launch("image/*") }
+            )
+        } else {
+            Image(
+                painter = rememberAsyncImagePainter(profilePicUri),
+                contentDescription = "Profile Picture",
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .clickable { pickImageLauncher.launch("image/*") }
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -93,6 +132,7 @@ fun UserProfileScreen(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
