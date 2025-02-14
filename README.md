@@ -35,7 +35,7 @@ MIT
 Users can see events available 
 
 
-![WhatsApp Image 2025-02-07 at 13 42 25_18118d23](https://github.com/user-attachments/assets/f5ab20a5-de38-4178-853b-972d57fd811f)
+![WhatsApp Image 2025-02-14 at 10 04 28_035fab07](https://github.com/user-attachments/assets/be5571f5-13d9-4e9e-84f1-b3ae3dba35bf)
 
 
 
