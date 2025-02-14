@@ -31,8 +31,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberAsyncImagePainter
-import com.example.mazeconnect.PREFS_NAME
-import com.example.mazeconnect.ORG_PROFILE_PIC_URI_KEY
 
 
 

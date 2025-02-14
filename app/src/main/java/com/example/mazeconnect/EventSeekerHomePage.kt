@@ -32,6 +32,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.res.painterResource
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
@@ -80,7 +81,7 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 .padding(16.dp)
                 .align(Alignment.TopCenter)
         ) {
-            // Shortened Search Bar with icon inside
+
             TextField(
                 value = "",
                 onValueChange = {},
@@ -161,7 +162,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
         }
     }
 }
-
 @Composable
 fun EventCard(event: EventData) {
     Card(
@@ -170,29 +170,36 @@ fun EventCard(event: EventData) {
             .padding(vertical = 8.dp)
             .clickable { /* TODO: Navigate to event details */ },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
-        Column {
-            if (event.imageUrl.isNotEmpty()) {
-                Image(
-                    painter = rememberAsyncImagePainter(event.imageUrl),
-                    contentDescription = event.name,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
-                )
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
+        ) {
+            // Background Image
+            Image(
+                painter = painterResource(id = R.drawable.upcomingevents),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize()
+            )
+
+            // Event Name Overlay
             Text(
-                event.name,
+                text = event.name,
                 fontSize = 18.sp,
                 color = Color.White,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(12.dp)
+                    .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             )
         }
     }
 }
+
 
 @Composable
 fun CategoryButton(label: String, backgroundColor: Color) {
@@ -208,8 +215,26 @@ fun CategoryButton(label: String, backgroundColor: Color) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewEventSeekerHomePage() {
+    val navController = rememberNavController()
+
+    // Dummy event list for preview
+    val dummyEvents = listOf(
+        EventData(id = "1", name = "Tech Conference", imageUrl = ""),
+        EventData(id = "2", name = "Music Festival", imageUrl = ""),
+        EventData(id = "3", name = "Award Ceremony", imageUrl = "")
+    )
+
     MaterialTheme {
-        val navController = rememberNavController()
-        EventSeekerHomePage(navController)
+        Column(modifier = Modifier.fillMaxSize().background(Color.Black).padding(16.dp)) {
+            Text("Browse Events", color = Color.White, fontSize = 24.sp)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn {
+                items(dummyEvents) { event ->
+                    EventCard(event)
+                }
+            }
+        }
     }
 }

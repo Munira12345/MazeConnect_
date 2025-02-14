@@ -30,23 +30,15 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
-
 @Composable
 fun CreateEvents(navController: NavHostController) {
     val context = LocalContext.current
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
     var eventName by remember { mutableStateOf("") }
     var eventDate by remember { mutableStateOf("") }
     var eventLocation by remember { mutableStateOf("") }
     var eventDescription by remember { mutableStateOf("") }
     var isUploading by remember { mutableStateOf(false) }
-
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        imageUri = uri
-    }
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
@@ -55,9 +47,9 @@ fun CreateEvents(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFE0F7FA)) // Soft Light Blue background
+                .background(Color(0xFFE0F7FA))
                 .padding(16.dp)
-                .padding(bottom = paddingValues.calculateBottomPadding()), // Added padding to avoid overlap
+                .padding(bottom = paddingValues.calculateBottomPadding()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -66,9 +58,8 @@ fun CreateEvents(navController: NavHostController) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(8.dp)) // Adjusted spacing
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Name, Date, Location, Description inputs...
             OutlinedTextField(
                 value = eventName,
                 onValueChange = { eventName = it },
@@ -101,44 +92,19 @@ fun CreateEvents(navController: NavHostController) {
                 singleLine = true
             )
 
-            // Image Picker Button
-            Button(
-                onClick = { imagePickerLauncher.launch("image/*") },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
-            ) {
-                Text("Select Event Image")
-            }
-
-            // Show Selected Image
-            imageUri?.let {
-                Image(
-                    painter = rememberAsyncImagePainter(it),
-                    contentDescription = "Selected Event Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(Color.Gray)
-                        .padding(8.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Log.d("EventUpload", "Image URI: $imageUri")
-
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Save Event Button
             Button(
                 onClick = {
                     isUploading = true
-                    uploadImageAndSaveEvent(
-                        context,
-                        imageUri,
+                    saveEventToRealtimeDatabase(
                         eventName,
                         eventDate,
                         eventLocation,
                         eventDescription
                     ) {
                         isUploading = false
+                        Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -150,79 +116,36 @@ fun CreateEvents(navController: NavHostController) {
     }
 }
 
-//to add this to check if user is logged in later
-// val currentUser = FirebaseAuth.getInstance().currentUser
-//if (currentUser != null) {
-fun uploadImageAndSaveEvent(
-    context: Context,
-    imageUri: Uri?,
+fun saveEventToRealtimeDatabase(
     name: String,
     date: String,
     location: String,
     description: String,
     onComplete: () -> Unit
 ) {
-    val storage = FirebaseStorage.getInstance().reference
-
-    if (imageUri != null) {
-        val imageRef = storage.child("event_images/${UUID.randomUUID()}.jpg")
-        imageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    saveEventToRealtimeDatabase(
-                        name,
-                        date,
-                        location,
-                        description,
-                        downloadUrl.toString()
-                    )
-                    Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
-                    onComplete()
-                }
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(context, "Image upload failed: ${exception.message}", Toast.LENGTH_SHORT).show()
-                Log.e("EventUpload", "Error: ${exception.message}")
-                onComplete()
-            }
-    }
-    else {
-        saveEventToRealtimeDatabase(name, date, location, description, null)
-        Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
-        onComplete()
-    }
-}
-
-// Function to save our events data to Firebase Realtime Database
-fun saveEventToRealtimeDatabase(
-    name: String,
-    date: String,
-    location: String,
-    description: String,
-    imageUrl: String?
-) {
     val database = FirebaseDatabase.getInstance().reference
+    val eventId = database.child("events").push().key
 
-    val eventId = database.child("events").push().key // Generate unique event ID
     val event = hashMapOf(
         "name" to name,
         "date" to date,
         "location" to location,
-        "description" to description,
-        "imageUrl" to imageUrl
+        "description" to description
     )
 
-    // Save event data in the "events" node under a new unique eventId
     eventId?.let {
         database.child("events").child(it).setValue(event)
             .addOnSuccessListener {
-                println("Event added with ID: $it")
+                Log.d("EventUpload", "Event added successfully with ID: $it")
+                onComplete()
             }
             .addOnFailureListener { e ->
-                println("Error adding event: $e")
+                Log.e("EventUpload", "Error adding event: ${e.message}")
+                onComplete()
             }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

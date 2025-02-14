@@ -32,10 +32,8 @@ data class Event(
     val name: String = "",
     val date: String = "",
     val location: String = "",
-    val description: String = "",
-    val imageUrl: String? = null
+    val description: String = ""
 )
-
 
 @Composable
 fun EventManagement(navController: NavHostController) {
@@ -45,10 +43,7 @@ fun EventManagement(navController: NavHostController) {
 
     LaunchedEffect(Unit) {
         try {
-            // Fetch events from Realtime Database
             val snapshot = database.child("events").get().await()
-
-            // Map the snapshot to a list of Event objects
             events = snapshot.children.mapNotNull { child ->
                 child.getValue(Event::class.java)?.copy(id = child.key ?: "")
             }
@@ -103,7 +98,6 @@ fun EventManagement(navController: NavHostController) {
         }
     }
 }
-
 
 @Composable
 fun EventManagementItem(eventName: String) {

@@ -32,7 +32,9 @@ import coil.compose.rememberAsyncImagePainter
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import com.example.mazeconnect.PREFS_NAME
 import com.example.mazeconnect.ORG_PROFILE_PIC_URI_KEY
 
@@ -95,7 +97,7 @@ fun OrgHomePage(navController: NavHostController) {
                                 tint = Color.Black
                             )
                         } else {
-                            // Display picked profile image
+
                             Image(
                                 painter = rememberAsyncImagePainter(savedProfileImageUrl),
                                 contentDescription = "User Profile",
@@ -161,16 +163,27 @@ fun EventsCard(title: String) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF1E90FF)), // Blue card background
-            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = title,
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(16.dp)
+            Image(
+                painter = painterResource(id = R.drawable.upcomingevents),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f)), // Dark overlay for readability
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = title,
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     }
 }
