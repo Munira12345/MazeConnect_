@@ -35,7 +35,7 @@ fun SplashScreen(navController: NavController) {
     val colors = listOf(Color.Black, Color(0xFF6A0DAD)) // Black to purple gradient
 
     LaunchedEffect(Unit) {
-        delay(3000) // Delay for 3 seconds
+        delay(2000) // Delay for 2 seconds
         navController.navigate("sign_up")
     }
 

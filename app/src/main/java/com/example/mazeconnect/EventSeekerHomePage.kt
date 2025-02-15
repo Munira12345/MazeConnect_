@@ -33,15 +33,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
+import com.example.mazeconnect.EventData
 
-data class EventData(
-    val id: String = "",
-    val name: String = "",
-    val imageUrl: String = ""
-)
 
 @Composable
 fun EventSeekerHomePage(navController: NavHostController) {
@@ -127,7 +124,7 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(events) { event ->
-                    EventCard(event)
+                    EventCard(event, navController)
                 }
             }
         }
@@ -162,13 +159,19 @@ fun EventSeekerHomePage(navController: NavHostController) {
         }
     }
 }
+
 @Composable
-fun EventCard(event: EventData) {
+fun EventCard(event: EventData, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable { /* TODO: Navigate to event details */ },
+            .clickable {
+                event.id?.let { id ->
+                    Log.d("EventCard", "Navigating to event: $id")
+                    navController.navigate("event_details/$id")
+                } ?: Log.e("EventCard", "Event ID is null or empty, cannot navigate")
+            },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
@@ -177,7 +180,6 @@ fun EventCard(event: EventData) {
                 .fillMaxWidth()
                 .height(180.dp)
         ) {
-            // Background Image
             Image(
                 painter = painterResource(id = R.drawable.upcomingevents),
                 contentDescription = null,
@@ -185,7 +187,6 @@ fun EventCard(event: EventData) {
                 modifier = Modifier.matchParentSize()
             )
 
-            // Event Name Overlay
             Text(
                 text = event.name,
                 fontSize = 18.sp,
@@ -232,7 +233,7 @@ fun PreviewEventSeekerHomePage() {
 
             LazyColumn {
                 items(dummyEvents) { event ->
-                    EventCard(event)
+                    EventCard(event, navController)
                 }
             }
         }

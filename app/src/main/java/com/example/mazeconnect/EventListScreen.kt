@@ -18,6 +18,16 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.compose.foundation.clickable
 import com.example.mazeconnect.components.EventSeekerBottomNavigation
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
+import com.example.mazeconnect.R
+import com.google.firebase.database.FirebaseDatabase
+import android.util.Log
+import androidx.compose.runtime.*
+import kotlinx.coroutines.tasks.await
+
+
 
 
 data class Event(
@@ -25,21 +35,27 @@ data class Event(
     val description: String,
     val date: String,
     val location: String,
-    val price: String
+  //  val price: String
 )
 
 @Composable
 fun EventList(navController: NavHostController) {
+    val database = FirebaseDatabase.getInstance().reference
+    var events by remember { mutableStateOf<List<com.example.mazeconnect.Event>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
 
-
-    val events = listOf(
-        Event("Tech Conference", "A gathering of tech enthusiasts.", "Dec 10, 2025", "Nairobi", "Ksh 1,000"),
-        Event("Music Festival", "Live music and fun.", "Nov 20, 2025", "Mombasa", "Ksh 2,500"),
-        Event("Art Exhibition", "Showcasing local artists.", "Oct 15, 2025", "Kisumu", "Ksh 800"),
-        Event("Sports Tournament", "Football & Basketball event.", "Sep 5, 2025", "Nakuru", "Ksh 1,500"),
-        Event("Cooking Class", "Learn new recipes.", "Aug 22, 2025", "Eldoret", "Ksh 500")
-    )
-
+    LaunchedEffect(Unit) {
+        try {
+            val snapshot = database.child("events").get().await()
+            events = snapshot.children.mapNotNull { child ->
+                child.getValue(com.example.mazeconnect.Event::class.java)?.copy(id = child.key ?: "")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            isLoading = false
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +66,6 @@ fun EventList(navController: NavHostController) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-
             Text(
                 text = "Explore Events",
                 style = TextStyle(
@@ -64,18 +79,22 @@ fun EventList(navController: NavHostController) {
                     .padding(bottom = 16.dp),
             )
 
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                items(events) { event ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        EventCard(navController = navController, event = event)
+            if (isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            } else if (events.isEmpty()) {
+                Text(
+                    text = "No events available.",
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = Color.Gray
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    items(events) { event ->
+                        EventCard(eventName = event.name)
                     }
                 }
             }
@@ -90,14 +109,17 @@ fun EventList(navController: NavHostController) {
         }
     }
 }
+
+
 @Composable
-fun EventCard(navController: NavHostController, event: Event) {
+fun EventCard(eventName: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth(0.7f)
             .height(100.dp)
             .clickable {
-                navController.navigate("event_details/${event.name}/${event.description}/${event.date}/${event.location}/${event.price}")
+          //      navController.navigate("event_details/${event.name}/${event.description}/${event.date}/${event.location}}")
+
             },
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = Color(0xFF6A0DAD)),
@@ -108,7 +130,7 @@ fun EventCard(navController: NavHostController, event: Event) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = event.name,
+                eventName,
                 style = TextStyle(
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,

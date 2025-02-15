@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
-import com.example.mazeconnect.components.BottomNavigationBar // Import the BottomNavigationBar component
+import com.example.mazeconnect.components.BottomNavigationBar
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
 

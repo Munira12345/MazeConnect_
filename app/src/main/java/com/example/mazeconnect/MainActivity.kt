@@ -2,6 +2,7 @@ package com.example.mazeconnect
 
 import EventList
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
@@ -14,6 +15,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import com.google.firebase.FirebaseApp
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.mazeconnect.SharedPrefsUtils
 import kotlinx.coroutines.launch
 
@@ -62,15 +65,13 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
         composable("event_organizer_home") { OrgHomePage(navController) }
         composable("create_events") { CreateEvents(navController) }
         composable("event_management") { EventManagement(navController) }
-        composable("event_details/{eventName}/{eventDescription}/{eventDate}/{eventLocation}/{ticketPrice}") { backStackEntry ->
-            EventDetails(
-                navController,
-                eventName = backStackEntry.arguments?.getString("eventName") ?: "Default Event",
-                eventDescription = backStackEntry.arguments?.getString("eventDescription") ?: "No description",
-                eventDate = backStackEntry.arguments?.getString("eventDate") ?: "No date",
-                eventLocation = backStackEntry.arguments?.getString("eventLocation") ?: "No location",
-                ticketPrice = backStackEntry.arguments?.getString("ticketPrice") ?: "Free"
-            )
+        composable(
+            "event_details/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: return@composable
+            Log.d("EventDetails", "Received id: $id")
+            EventDetails(navController, id)
         }
 
         composable("event_list") { EventList(navController) }
