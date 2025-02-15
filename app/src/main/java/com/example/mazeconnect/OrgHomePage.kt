@@ -53,6 +53,9 @@ fun OrgHomePage(navController: NavHostController) {
     val events = remember { mutableStateListOf<String>() }
     val eventsLoaded = remember { mutableStateOf(false) }
 
+    // Placeholder for subscriber count (Currently set to 0)
+    val subscriberCount = remember { mutableStateOf(0) }
+
     LaunchedEffect(userId) {
         db.collection("events")
             .whereEqualTo("userId", userId)
@@ -63,6 +66,14 @@ fun OrgHomePage(navController: NavHostController) {
                     events.add(document.getString("eventName") ?: "Unknown Event")
                 }
                 eventsLoaded.value = true
+            }
+
+        // Fetch subscriber count (Assuming a "subscribers" collection exists)
+        db.collection("subscribers")
+            .whereEqualTo("orgId", userId)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                subscriberCount.value = querySnapshot.size()
             }
     }
 
@@ -82,22 +93,44 @@ fun OrgHomePage(navController: NavHostController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
+                // Profile Picture & Subscriber Count Row
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { /* O */ }) {
-                        if (savedProfileImageUrl.isNullOrEmpty()) {
+                    Spacer(modifier = Modifier.weight(1f)) // Pushes items to the right
 
+                    // Subscribers Count
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "${subscriberCount.value}",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "Subscribers",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Light,
+                            color = Color.Gray
+                        )
+                    }
+
+                    // Profile Picture
+                    IconButton(onClick = { /* Open Profile */ }) {
+                        if (savedProfileImageUrl.isNullOrEmpty()) {
                             Icon(
                                 imageVector = Icons.Filled.AccountCircle,
                                 contentDescription = "User Profile",
-                                tint = Color.Black
+                                tint = Color.Black,
+                                modifier = Modifier.size(40.dp)
                             )
                         } else {
-
                             Image(
                                 painter = rememberAsyncImagePainter(savedProfileImageUrl),
                                 contentDescription = "User Profile",
@@ -107,7 +140,7 @@ fun OrgHomePage(navController: NavHostController) {
                     }
                 }
 
-                // Horizontal Scrollable Cards (LazyRow) for the events
+                // Events List
                 if (eventsLoaded.value) {
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
@@ -193,6 +226,88 @@ fun EventsCard(title: String) {
 fun PreviewOrgHomePage() {
     MazeConnectTheme {
         val navController = rememberNavController()
-        OrgHomePage(navController)
+
+        // Dummy event list for preview
+        val dummyEvents = listOf("Tech Summit", "Business Expo", "Health Awareness", "AI Workshop")
+
+        Scaffold(
+            bottomBar = { BottomNavigationBar(navController) }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFFE0F7FA))
+                    .padding(paddingValues)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Profile Picture & Subscriber Count Row
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "0", // Default preview subscriber count
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "Subscribers",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Light,
+                                color = Color.Gray
+                            )
+                        }
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.Filled.AccountCircle,
+                                contentDescription = "User Profile",
+                                tint = Color.Black
+                            )
+                        }
+                    }
+
+                    // Dummy event list display
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(dummyEvents) { event ->
+                            EventsCard(title = event)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Navigation Buttons
+                    Button(
+                        onClick = { /* Navigate to create event */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        Text("Create New Event", color = Color.White)
+                    }
+
+                    Button(
+                        onClick = { /* Navigate to manage events */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp)
+                    ) {
+                        Text("Manage Events", color = Color.White)
+                    }
+                }
+            }
+        }
     }
 }
