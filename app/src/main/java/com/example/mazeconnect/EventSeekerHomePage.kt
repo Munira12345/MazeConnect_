@@ -181,7 +181,7 @@ fun EventCard(event: EventData, navController: NavController) {
                 .height(180.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.upcomingevents),
+                painter = painterResource(id = R.drawable.your_events),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize()
