@@ -48,7 +48,8 @@ Users can get metrics for the event they posted
 Event Organizers homepage  
 
 
-![WhatsApp Image 2025-02-01 at 12 50 52_b72ed4f4](https://github.com/user-attachments/assets/6fc75d07-64b9-4c6e-bb23-7240f59e52e9)
+![WhatsApp Image 2025-02-15 at 22 00 22_8bf94c12](https://github.com/user-attachments/assets/70b0ed8b-ce87-4344-9fbf-b415f6981e00)
+
 
 
 users can register for an event/ payment to mpesa feature coming soon! 
