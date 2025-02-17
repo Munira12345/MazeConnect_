@@ -22,8 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.example.mazeconnect.components.BottomNavigationBar // Import the BottomNavigationBar component
+import com.example.mazeconnect.components.BottomNavigationBar
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -35,45 +34,52 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.getValue
 import com.example.mazeconnect.PREFS_NAME
 import com.example.mazeconnect.ORG_PROFILE_PIC_URI_KEY
+
 
 
 @Composable
 fun OrgHomePage(navController: NavHostController) {
     val user = FirebaseAuth.getInstance().currentUser
-    val db = FirebaseFirestore.getInstance()
-    val userId = user?.uid ?: ""  // Get the current user's UID
+    val userId = user?.uid ?: ""
 
-    // Load the saved profile image URL from SharedPreferences using ProfilePicSharedPrefs
+
     val context = LocalContext.current
     val savedProfileImageUrl = ProfilePicSharedPrefs.getProfilePicUri(context)
 
-    // Fetch events from Firestore
+
     val events = remember { mutableStateListOf<String>() }
     val eventsLoaded = remember { mutableStateOf(false) }
 
-    // Placeholder for subscriber count (Currently set to 0)
+
     val subscriberCount = remember { mutableStateOf(0) }
 
     LaunchedEffect(userId) {
-        db.collection("events")
-            .whereEqualTo("userId", userId)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
+
+        val database = FirebaseDatabase.getInstance()
+        val eventsRef = database.getReference("events")
+
+        eventsRef.orderByChild("userId").equalTo(userId).get()
+            .addOnSuccessListener { snapshot ->
                 events.clear()
-                for (document in querySnapshot) {
-                    events.add(document.getString("eventName") ?: "Unknown Event")
+                snapshot.children.forEach { child ->
+                    val eventName = child.child("eventName").getValue<String>()
+                    if (eventName != null) {
+                        events.add(eventName)
+                    }
                 }
                 eventsLoaded.value = true
             }
 
-        // Fetch subscriber count (Assuming a "subscribers" collection exists)
-        db.collection("subscribers")
-            .whereEqualTo("orgId", userId)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                subscriberCount.value = querySnapshot.size()
+        // Fetch subscriber count (will create a "subscribers" node later)
+        val subscribersRef = database.getReference("subscribers")
+        subscribersRef.orderByChild("orgId").equalTo(userId).get()
+            .addOnSuccessListener { snapshot ->
+                subscriberCount.value = snapshot.childrenCount.toInt()
             }
     }
 
@@ -176,7 +182,6 @@ fun OrgHomePage(navController: NavHostController) {
         }
     }
 }
-
 
 
 fun loadOrgProfilePicUri(sharedPreferences: SharedPreferences): String? {
