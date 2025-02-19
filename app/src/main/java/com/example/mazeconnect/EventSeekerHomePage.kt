@@ -28,10 +28,12 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.mazeconnect.components.EventSeekerBottomNavigation
 //import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.google.firebase.database.DatabaseReference
@@ -162,15 +164,19 @@ fun EventSeekerHomePage(navController: NavHostController) {
 
 @Composable
 fun EventCard(event: EventData, navController: NavController) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                event.id?.let { id ->
-                    Log.d("EventCard", "Navigating to event: $id")
-                    navController.navigate("event_details/$id")
-                } ?: Log.e("EventCard", "Event ID is null or empty, cannot navigate")
+                if (event.id.isEmpty()) {
+                    Toast.makeText(context, "Event not available", Toast.LENGTH_SHORT).show() // Use 'context' here
+                    Log.e("EventCard", "Event ID is null or empty, cannot navigate")
+                } else {
+                    Log.d("EventCard", "Navigating to event: ${event.id}")
+                    navController.navigate("event_details/${event.id}")
+                }
             },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)

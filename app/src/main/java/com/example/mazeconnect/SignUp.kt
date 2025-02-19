@@ -21,6 +21,9 @@ import androidx.compose.ui.graphics.Color
 import com.google.firebase.auth.FirebaseAuth
 //import com.google.firebase.auth.FirebaseAuthException
 import androidx.compose.foundation.background
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +48,13 @@ fun SignUpScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(Color(0xFFD0A9F5))
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(Color(0xFFC364FA), Color(0xFFD0A9F5)), // Gradient from #C364FA to #D0A9F5
+                        start = Offset(0f, 0f),
+                        end = Offset(0f, Float.POSITIVE_INFINITY)
+                    )
+                )
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {

@@ -17,11 +17,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
-import com.example.mazeconnect.EventData
 import androidx.compose.ui.graphics.ColorFilter
-
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 @Composable
 fun EventDetails(
     navController: NavHostController,
@@ -30,72 +32,37 @@ fun EventDetails(
 ) {
     var event by remember { mutableStateOf(mockEvent) }
 
-    // Fetch event from Firebase only if it's not in preview mode
+    // ✅ Fetch event details from Firebase when ID is available
     LaunchedEffect(id) {
         if (id != null) {
-            val db = FirebaseFirestore.getInstance()
-            val doc = db.collection("events").document(id).get().await()
-            event = doc.toObject(EventData::class.java)
+            val database = FirebaseDatabase.getInstance().reference.child("events").child(id)
+
+            database.get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val fetchedEvent = snapshot.getValue(EventData::class.java)
+                    if (fetchedEvent != null) {
+                        event = fetchedEvent.copy(id = id) // ✅ Assign Firebase key as ID
+                    }
+                } else {
+                    event = null // Event not found
+                }
+            }.addOnFailureListener {
+                event = null // Handle errors
+            }
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.connect),
-            contentDescription = "Your Image",
-            modifier = Modifier
-                .size(40.dp)
-                .align(Alignment.TopStart),
-            colorFilter = ColorFilter.tint(Color.White)
-        )
+    // UI Code (Keep this part as it was)
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
             event?.let {
-                Text(
-                    text = it.name,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontSize = 22.sp
-                    )
-                )
-
-                Text(
-                    text = "${it.date} • ${it.location}",
-                    style = TextStyle(
-                        color = Color.Gray,
-                        fontSize = 14.sp
-                    )
-                )
-
-                Text(
-                    text = it.description,
-                    style = TextStyle(
-                        color = Color.White,
-                        fontSize = 14.sp
-                    )
-                )
-
-                Button(
-                    onClick = { /* Handle ticket purchase */ },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-                ) {
-                    Text("Buy Tickets")
-                }
-
-                Button(
-                    onClick = { /* Handle RSVP */ },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-                ) {
-                    Text("RSVP Now", color = Color.White)
-                }
+                Text(text = it.name, style = TextStyle(fontWeight = FontWeight.Bold, color = Color.White, fontSize = 22.sp))
+                Text(text = "${it.date} • ${it.location}", style = TextStyle(color = Color.Gray, fontSize = 14.sp))
+                Text(text = it.description, style = TextStyle(color = Color.White, fontSize = 14.sp))
 
                 Button(
                     onClick = { navController.navigate("event_list") },
@@ -103,10 +70,15 @@ fun EventDetails(
                 ) {
                     Text("Back to Events", color = Color.White)
                 }
-            }
+            } ?: Text(
+                text = "Event not available.",
+                color = Color.White,
+                fontSize = 16.sp
+            )
         }
     }
 }
+
 
 // Preview with Mock Data
 @Preview(showBackground = true)

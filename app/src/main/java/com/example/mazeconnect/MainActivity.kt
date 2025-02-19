@@ -69,9 +69,16 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
             "event_details/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id") ?: return@composable
-            Log.d("EventDetails", "Received id: $id")
-            EventDetails(navController, id)
+            val id = backStackEntry.arguments?.getString("id")
+
+            if (id == null) {
+                Log.e("EventDetails", "Missing event ID in navigation")
+                //  navigate back to homepage
+                navController.popBackStack()
+            } else {
+                Log.d("EventDetails", "Received id: $id")
+                EventDetails(navController, id)
+            }
         }
 
         composable("event_list") { EventList(navController) }
