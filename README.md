@@ -42,7 +42,8 @@ Users can see events available
 Users can get metrics for the event they posted
 
 
-![WhatsApp Image 2025-01-31 at 15 12 54_6b590a6e](https://github.com/user-attachments/assets/c9b47930-4581-4d3e-8289-076ee649f710)
+![WhatsApp Image 2025-02-19 at 12 23 12_a5f85036](https://github.com/user-attachments/assets/89a8c577-3d19-42b6-bd67-3c90116e60bb)
+
 
 
 Event Organizers homepage  
