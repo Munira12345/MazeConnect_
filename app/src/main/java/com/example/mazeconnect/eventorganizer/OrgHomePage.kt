@@ -1,8 +1,5 @@
-package com.example.mazeconnect
+package com.example.mazeconnect.eventorganizer
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,18 +25,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.getValue
-import com.example.mazeconnect.PREFS_NAME
 import com.example.mazeconnect.ORG_PROFILE_PIC_URI_KEY
-
+import com.example.mazeconnect.ProfilePicSharedPrefs
+import com.example.mazeconnect.R
 
 
 @Composable

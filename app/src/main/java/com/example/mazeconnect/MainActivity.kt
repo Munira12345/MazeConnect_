@@ -14,12 +14,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import com.google.firebase.FirebaseApp
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.mazeconnect.SharedPrefsUtils
-import kotlinx.coroutines.launch
-
+import com.example.mazeconnect.common.EventRoleScreen
+import com.example.mazeconnect.common.SignInScreen
+import com.example.mazeconnect.common.SignUpScreen
+import com.example.mazeconnect.common.SplashScreen
+import com.example.mazeconnect.common.UserProfileScreen
+import com.example.mazeconnect.eventorganizer.CreateEvents
+import com.example.mazeconnect.eventorganizer.EventManagement
+import com.example.mazeconnect.eventorganizer.EventMetrics
+import com.example.mazeconnect.eventorganizer.OrgHomePage
+import com.example.mazeconnect.eventseeker.EventDetails
+import com.example.mazeconnect.eventseeker.EventSeekerHomePage
 
 
 class MainActivity : ComponentActivity() {
@@ -84,7 +91,7 @@ fun NavigationGraph(navController: NavHostController, role: String?) {
         composable("event_list") { EventList(navController) }
        // composable("event_details") { EventDetails(navController, "Sample Event") }
        // composable("event_metrics") { EventMetrics("Sample Event") }
-        composable("event_metrics") {EventMetrics("Sample Event", navController)   }
+        composable("event_metrics") { EventMetrics("Sample Event", navController)   }
         composable("user_profile") {
             UserProfileScreen(navController = navController)
         }

@@ -1,4 +1,4 @@
-package com.example.mazeconnect
+package com.example.mazeconnect.eventorganizer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

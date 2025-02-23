@@ -1,8 +1,5 @@
-package com.example.mazeconnect
+package com.example.mazeconnect.common
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,8 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,7 +26,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberAsyncImagePainter
-
+import com.example.mazeconnect.ProfilePicSharedPrefs
 
 
 fun signOutUser(navController: NavController, onSignOutComplete: () -> Unit) {

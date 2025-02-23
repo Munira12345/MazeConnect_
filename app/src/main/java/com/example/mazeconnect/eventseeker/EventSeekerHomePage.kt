@@ -1,8 +1,5 @@
-package com.example.mazeconnect
+package com.example.mazeconnect.eventseeker
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -40,6 +37,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
 import com.example.mazeconnect.EventData
+import com.example.mazeconnect.R
 
 
 @Composable

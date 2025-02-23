@@ -18,13 +18,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.compose.foundation.clickable
 import com.example.mazeconnect.components.EventSeekerBottomNavigation
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.res.painterResource
-import androidx.compose.foundation.Image
-import com.example.mazeconnect.R
 import com.google.firebase.database.FirebaseDatabase
-import android.util.Log
 import androidx.compose.runtime.*
+import com.example.mazeconnect.eventorganizer.Event
 import kotlinx.coroutines.tasks.await
 
 
@@ -41,14 +37,14 @@ data class Event(
 @Composable
 fun EventList(navController: NavHostController) {
     val database = FirebaseDatabase.getInstance().reference
-    var events by remember { mutableStateOf<List<com.example.mazeconnect.Event>>(emptyList()) }
+    var events by remember { mutableStateOf<List<Event>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         try {
             val snapshot = database.child("events").get().await()
             events = snapshot.children.mapNotNull { child ->
-                child.getValue(com.example.mazeconnect.Event::class.java)?.copy(id = child.key ?: "")
+                child.getValue(Event::class.java)?.copy(id = child.key ?: "")
             }
         } catch (e: Exception) {
             e.printStackTrace()
