@@ -25,7 +25,6 @@ import com.example.mazeconnect.ui.theme.MazeConnectTheme
 @Composable
 fun EventMetrics(eventName: String, navController: NavHostController) {
     // Event Metrics Data
-    val registered = 120
     val views = 350
     val comments = 50
     val rsvp = 100
@@ -51,8 +50,7 @@ fun EventMetrics(eventName: String, navController: NavHostController) {
             )
 
             // Event Metrics Data
-            MetricCard(title = "Registrations", count = registered)
-            MetricCard(title = "Views", count = views)
+            MetricCard(title = "Total Views", count = views)
             MetricCard(title = "Comments", count = comments)
             MetricCard(title = "RSVPs", count = rsvp)
             MetricCard(title = "Shares", count = shares)
