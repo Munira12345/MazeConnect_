@@ -7,5 +7,7 @@ data class EventData(
     val date: String = "",
     val location: String = "",
     val ticketPrice: String = "",
+    val category: String = "",
+    val price: String = "",
     val imageUrl: String = ""
 )

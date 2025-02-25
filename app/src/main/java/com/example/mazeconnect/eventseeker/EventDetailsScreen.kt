@@ -77,6 +77,22 @@ fun EventDetails(
                     style = TextStyle(color = Color.Gray, fontSize = 14.sp)
                 )
 
+                Text(
+                    text = "Category: ${it.category}",
+                    style = TextStyle(color = Color.White, fontSize = 14.sp)
+                )
+
+                //  Price
+                Text(
+                    text = "Price: ${it.price}",
+                    style = TextStyle(
+                        color = if (it.price == "Free") Color.Green else Color.Yellow,
+                        fontSize = 14.sp
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 // ✅ Clickable Location Text (Opens Google Maps)
                 ClickableText(
                     text = AnnotatedString("View Location"),
@@ -91,6 +107,15 @@ fun EventDetails(
 
                 Text(text = it.description, style = TextStyle(color = Color.White, fontSize = 14.sp))
 
+                //  Buy Ticket Button (Only if price isn’t Free that is)
+                if (it.price.lowercase() != "free") {
+                    Button(
+                        onClick = { /* TODO: Implement ticket purchase logic with mpesa later */ },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    ) {
+                        Text("Buy Ticket", color = Color.White)
+                    }
+                }
                 Button(
                     onClick = { navController.navigate("event_list") },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -118,6 +143,8 @@ fun PreviewEventDetails() {
         description = "A night of worship and praise. Join us for an uplifting experience.",
         date = "December 30, 2025",
         location = "Nairobi",
+        category = "Religious",
+        price = "500 KES",
     )
 
     EventDetails(navController, mockEvent = mockEvent)
