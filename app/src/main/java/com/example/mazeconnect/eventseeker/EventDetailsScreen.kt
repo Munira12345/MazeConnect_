@@ -15,14 +15,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.Image
 import com.example.mazeconnect.EventData
 import android.content.Intent
 import android.net.Uri
+import com.example.mazeconnect.R
 import java.net.URLEncoder
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 
 
 import com.google.firebase.database.FirebaseDatabase
@@ -107,7 +110,7 @@ fun EventDetails(
 
                 Text(text = it.description, style = TextStyle(color = Color.White, fontSize = 14.sp))
 
-                //  Buy Ticket Button (Only if price isn’t Free that is)
+                //  Buy Ticket Button (Only if price isn’t Free)
                 if (it.price.lowercase() != "free") {
                     Button(
                         onClick = { /* TODO: Implement ticket purchase logic with mpesa later */ },
@@ -117,22 +120,38 @@ fun EventDetails(
                     }
                 }
 
+                // RSVP Button with Disabled State and Warning Message
+                val isPaidEvent = it.price.lowercase() != "free"
 
-               /* Button(
-                    onClick = { /* TODO: Implement RSVP functionality */ },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("RSVP", color = Color.White)
+                    Button(
+                        onClick = { /* TODO: Implement RSVP functionality */ },
+                        modifier = Modifier.weight(1f).padding(vertical = 8.dp),
+                        enabled = !isPaidEvent // Disable if event is paid
+                    ) {
+                        Text("RSVP", color = Color.White)
+                    }
+
+                    if (isPaidEvent) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.stop),
+                            contentDescription = "Paid Event",
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "This is a paid event. Buy a ticket first.",
+                            color = Color.Red,
+                            fontSize = 12.sp
+                        )
+                    }
                 }
-*/
-                // RSVP Button (Disabled if price isn't "Free")
-                Button(
-                    onClick = { /* TODO: Implement RSVP functionality */ },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                    enabled = event?.price?.lowercase() == "free"
-                ) {
-                    Text("RSVP", color = Color.White)
-                }
+
+                // Back Button
                 Button(
                     onClick = { navController.navigate("event_list") },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -147,7 +166,6 @@ fun EventDetails(
         }
     }
 }
-
 // Preview with Mock Data
 @Preview(showBackground = true)
 @Composable
