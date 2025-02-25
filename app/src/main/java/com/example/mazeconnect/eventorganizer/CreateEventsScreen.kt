@@ -29,6 +29,8 @@ fun CreateEvents(navController: NavHostController) {
     var eventDate by remember { mutableStateOf("") }
     var eventLocation by remember { mutableStateOf("") }
     var eventDescription by remember { mutableStateOf("") }
+    var eventCategory by remember { mutableStateOf("") }
+    var eventPrice by remember { mutableStateOf("") }
     var isUploading by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -83,6 +85,21 @@ fun CreateEvents(navController: NavHostController) {
                 singleLine = true
             )
 
+            OutlinedTextField(
+                value = eventCategory,
+                onValueChange = { eventCategory = it },
+                label = { Text("Event Category") },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                singleLine = true
+            )
+
+            OutlinedTextField(
+                value = eventPrice,
+                onValueChange = { eventPrice = it },
+                label = { Text("Price (Enter 'Free' or Amount)") },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                singleLine = true
+            )
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
@@ -92,7 +109,9 @@ fun CreateEvents(navController: NavHostController) {
                         eventName,
                         eventDate,
                         eventLocation,
-                        eventDescription
+                        eventDescription,
+                        eventCategory,
+                        eventPrice
                     ) {
                         isUploading = false
                         Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
@@ -112,6 +131,8 @@ fun saveEventToRealtimeDatabase(
     date: String,
     location: String,
     description: String,
+    category: String,
+    price: String,
     onComplete: () -> Unit
 ) {
     val database = FirebaseDatabase.getInstance().reference
@@ -121,7 +142,9 @@ fun saveEventToRealtimeDatabase(
         "name" to name,
         "date" to date,
         "location" to location,
-        "description" to description
+        "description" to description,
+        "category" to category,
+        "price" to price
     )
 
     eventId?.let {

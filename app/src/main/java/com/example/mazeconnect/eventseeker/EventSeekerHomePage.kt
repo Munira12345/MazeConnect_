@@ -55,9 +55,9 @@ fun EventSeekerHomePage(navController: NavHostController) {
         database.get().addOnSuccessListener { snapshot ->
             events.clear()
             snapshot.children.forEach { childSnapshot ->
-                val event = childSnapshot.getValue<EventData>()
+                val event = childSnapshot.getValue(EventData::class.java)
                 event?.let {
-                    events.add(it)
+                    events.add(it.copy(id = childSnapshot.key ?: "")) // Assign Firebase ID
                 }
             }
         }.addOnFailureListener { e ->
@@ -168,14 +168,15 @@ fun EventCard(event: EventData, navController: NavController) {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable {
-                if (event.id.isEmpty()) {
-                    Toast.makeText(context, "Event not available", Toast.LENGTH_SHORT).show() // Use 'context' here
+                if (event.id.isBlank()) {
+                    Toast.makeText(context, "Event ID not available", Toast.LENGTH_SHORT).show()
                     Log.e("EventCard", "Event ID is null or empty, cannot navigate")
                 } else {
                     Log.d("EventCard", "Navigating to event: ${event.id}")
                     navController.navigate("event_details/${event.id}")
                 }
             },
+
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
