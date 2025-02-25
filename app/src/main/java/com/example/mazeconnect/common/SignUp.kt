@@ -23,6 +23,11 @@ import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.foundation.background
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
+import com.example.mazeconnect.R
+import androidx.compose.ui.Alignment
+
 
 
 
@@ -56,8 +61,17 @@ fun SignUpScreen(navController: NavHostController) {
                     )
                 )
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.connect),
+                contentDescription = "Connect Icon",
+                modifier = Modifier
+                    .size(88.dp)
+                    .padding(bottom = 16.dp) // Add spacing before fields
+            )
             TextField(
                 value = name,
                 onValueChange = { name = it },

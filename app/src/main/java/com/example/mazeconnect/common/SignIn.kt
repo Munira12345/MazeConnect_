@@ -1,5 +1,6 @@
 package com.example.mazeconnect.common
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -23,6 +25,10 @@ import com.google.firebase.auth.FirebaseAuth
 //import com.google.firebase.auth.FirebaseAuthException
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.res.painterResource
+import com.example.mazeconnect.R
+import androidx.compose.foundation.Image
+//import androidx.compose.ui.Alignment
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,8 +60,17 @@ fun SignInScreen(navController: NavHostController) {
                     )
                 )
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.connect),
+                contentDescription = "Connect Icon",
+                modifier = Modifier
+                    .size(88.dp)
+                    .padding(bottom = 16.dp)
+            )
             TextField(
                 value = email,
                 onValueChange = { email = it },
