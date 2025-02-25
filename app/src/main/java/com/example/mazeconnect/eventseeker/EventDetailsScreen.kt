@@ -116,6 +116,23 @@ fun EventDetails(
                         Text("Buy Ticket", color = Color.White)
                     }
                 }
+
+
+               /* Button(
+                    onClick = { /* TODO: Implement RSVP functionality */ },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                ) {
+                    Text("RSVP", color = Color.White)
+                }
+*/
+                // RSVP Button (Disabled if price isn't "Free")
+                Button(
+                    onClick = { /* TODO: Implement RSVP functionality */ },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    enabled = event?.price?.lowercase() == "free"
+                ) {
+                    Text("RSVP", color = Color.White)
+                }
                 Button(
                     onClick = { navController.navigate("event_list") },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
