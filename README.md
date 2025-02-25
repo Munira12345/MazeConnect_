@@ -54,6 +54,12 @@ Event Organizers homepage
 
 
 
+Users can search for the events, connect to uber, Bolt or just Google Maps for directions 
+
+
+![WhatsApp Image 2025-02-25 at 11 45 56_ca6e2652](https://github.com/user-attachments/assets/bc7fb1f6-758f-4c38-b179-03cc32323f2e)
+
+
 users can register for an event/ payment to mpesa feature coming soon! 
 
 
