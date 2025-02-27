@@ -66,7 +66,8 @@ users can register for an event/ payment to mpesa feature coming soon!
 
 
 
-![WhatsApp Image 2025-02-01 at 15 08 15_f94fed9b](https://github.com/user-attachments/assets/907ea72e-3eef-4b0e-911f-eb985f005cc2)
+![WhatsApp Image 2025-02-27 at 12 42 12_11551903](https://github.com/user-attachments/assets/2a8606ff-9aa3-4b56-93e2-4352c8215f4b)
+
 
 
 
