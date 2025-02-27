@@ -2,6 +2,7 @@ package com.example.mazeconnect.eventorganizer
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -20,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import com.example.mazeconnect.components.BottomNavigationBar // BottomNavigationBar component
 import com.google.firebase.database.FirebaseDatabase
+import com.example.mazeconnect.components.ReusableOutlinedButton
 
 @Composable
 fun CreateEvents(navController: NavHostController) {
@@ -102,7 +104,7 @@ fun CreateEvents(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
+            OutlinedButton(
                 onClick = {
                     isUploading = true
                     saveEventToRealtimeDatabase(
@@ -117,11 +119,18 @@ fun CreateEvents(navController: NavHostController) {
                         Toast.makeText(context, "Event saved!", Toast.LENGTH_SHORT).show()
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                border = BorderStroke(2.dp, Color(0xFF800080)), // Purple border
                 enabled = !isUploading
             ) {
-                Text(if (isUploading) "Saving..." else "Save Event", color = Color.White)
+                Text(
+                    text = if (isUploading) "Saving..." else "Save Event",
+                    color = Color(0xFF800080) // Purple text
+                )
             }
+
         }
     }
 }

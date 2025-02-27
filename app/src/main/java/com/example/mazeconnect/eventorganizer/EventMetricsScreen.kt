@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
+import com.example.mazeconnect.components.ReusableOutlinedButton
 
 @Composable
 fun EventMetrics(eventName: String, navController: NavHostController) {
@@ -59,16 +60,14 @@ fun EventMetrics(eventName: String, navController: NavHostController) {
             Spacer(modifier = Modifier.weight(1f))
 
             // Button to Event Management screen
-            Button(
-                onClick =  { navController.navigate("event_management") },
+            ReusableOutlinedButton(
+                text = "Back to Event Management",
+                onClick = { navController.navigate("event_management") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)) // Purple button
-            ) {
-                Text(text = "Back to Event Management", color = Color.White, fontWeight = FontWeight.SemiBold)
-            }
+                    .padding(16.dp)
+            )
+
         }
     }
 }
