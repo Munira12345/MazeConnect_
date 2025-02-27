@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,7 +31,6 @@ data class Event(
     val location: String = "",
     val description: String = ""
 )
-
 @Composable
 fun EventManagement(navController: NavHostController) {
     val database = FirebaseDatabase.getInstance().reference
@@ -48,6 +48,16 @@ fun EventManagement(navController: NavHostController) {
         } finally {
             isLoading = false
         }
+    }
+
+    fun deleteEvent(eventId: String) {
+        database.child("events").child(eventId).removeValue()
+            .addOnSuccessListener {
+                events = events.filter { it.id != eventId } // Updating UI after deletion
+            }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+            }
     }
 
     Scaffold(
@@ -86,7 +96,7 @@ fun EventManagement(navController: NavHostController) {
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(events) { event ->
-                            EventManagementItem(eventName = event.name)
+                            EventManagementItem(event, onDelete = { deleteEvent(event.id) })
                         }
                     }
                 }
@@ -96,16 +106,35 @@ fun EventManagement(navController: NavHostController) {
 }
 
 @Composable
-fun EventManagementItem(eventName: String) {
-    Button(
-        onClick = { /* Navigate to event details */ },
+fun EventManagementItem(event: Event, onDelete: () -> Unit) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Text(eventName, color = Color.White)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = event.name,
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Event",
+                    tint = Color.Red
+                )
+            }
+        }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
