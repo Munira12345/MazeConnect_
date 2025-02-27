@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.rememberAsyncImagePainter
 import android.content.SharedPreferences
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -54,29 +55,34 @@ fun OrgHomePage(navController: NavHostController) {
     val subscriberCount = remember { mutableStateOf(0) }
 
     LaunchedEffect(userId) {
-
         val database = FirebaseDatabase.getInstance()
         val eventsRef = database.getReference("events")
 
         eventsRef.orderByChild("userId").equalTo(userId).get()
             .addOnSuccessListener { snapshot ->
                 events.clear()
-                snapshot.children.forEach { child ->
-                    val eventName = child.child("eventName").getValue<String>()
-                    if (eventName != null) {
-                        events.add(eventName)
+                if (snapshot.exists()) {
+                    snapshot.children.forEach { child ->
+                        val eventName = child.child("eventName").getValue<String>()
+                        if (!eventName.isNullOrEmpty()) {
+                            events.add(eventName)
+                        }
                     }
                 }
-                eventsLoaded.value = true
+                eventsLoaded.value = true  // ✅ Ensures UI updates even if no events found
+            }
+            .addOnFailureListener {
+                eventsLoaded.value = true  // ✅ Prevents endless loading if an error occurs
             }
 
-        // Fetch subscriber count (will create a "subscribers" node later)
+        // Fetch subscriber count
         val subscribersRef = database.getReference("subscribers")
         subscribersRef.orderByChild("orgId").equalTo(userId).get()
             .addOnSuccessListener { snapshot ->
                 subscriberCount.value = snapshot.childrenCount.toInt()
             }
     }
+
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
@@ -143,13 +149,22 @@ fun OrgHomePage(navController: NavHostController) {
 
                 // Events List
                 if (eventsLoaded.value) {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(events) { event ->
-                            EventsCard(title = event)
+                    if (events.isNotEmpty()) {
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(events) { event ->
+                                EventsCard(title = event)
+                            }
                         }
+                    } else {
+                        Text(
+                            text = "No events found",
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            fontSize = 16.sp,
+                            color = Color.Gray
+                        )
                     }
                 } else {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -289,23 +304,26 @@ fun PreviewOrgHomePage() {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Navigation Buttons
-                    Button(
+                    OutlinedButton(
                         onClick = { /* Navigate to create event */ },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp)
+                            .padding(top = 16.dp),
+                        border = BorderStroke(2.dp, Color(0xFF800080))
                     ) {
-                        Text("Create New Event", color = Color.White)
+                        Text("Create New Event", color = Color(0xFF800080))
                     }
 
-                    Button(
+                    OutlinedButton(
                         onClick = { /* Navigate to manage events */ },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp)
+                            .padding(top = 16.dp),
+                        border = BorderStroke(2.dp, Color(0xFF800080))
                     ) {
-                        Text("Manage Events", color = Color.White)
+                        Text("Manage Events", color = Color(0xFF800080))
                     }
+
                 }
             }
         }
