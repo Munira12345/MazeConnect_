@@ -50,17 +50,20 @@ Users can get metrics for the event they posted
 Event Organizers homepage  
 
 
-![WhatsApp Image 2025-02-15 at 22 00 22_8bf94c12](https://github.com/user-attachments/assets/70b0ed8b-ce87-4344-9fbf-b415f6981e00)
+![WhatsApp Image 2025-02-27 at 12 06 44_e4071e1d](https://github.com/user-attachments/assets/ddcad474-3e2e-4af8-b350-3539fc2a7737)
 
 
 
 Users can search for the events, connect to uber, Bolt or just Google Maps for directions 
 
 
+
 ![WhatsApp Image 2025-02-25 at 11 45 56_ca6e2652](https://github.com/user-attachments/assets/bc7fb1f6-758f-4c38-b179-03cc32323f2e)
 
 
+
 users can register for an event/ payment to mpesa feature coming soon! 
+
 
 
 ![WhatsApp Image 2025-02-01 at 15 08 15_f94fed9b](https://github.com/user-attachments/assets/907ea72e-3eef-4b0e-911f-eb985f005cc2)
