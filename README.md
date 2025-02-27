@@ -42,7 +42,7 @@ Users can see events available
 Users can get metrics for the event they posted
 
 
-![WhatsApp Image 2025-02-19 at 12 26 08_f7a015d6](https://github.com/user-attachments/assets/97f2bdec-3d73-4243-be6b-b310afd19faa)
+!![WhatsApp Image 2025-02-27 at 12 34 06_09d11961](https://github.com/user-attachments/assets/372a374d-66a7-40b9-9787-226ef1eb1be6)
 
 
 
