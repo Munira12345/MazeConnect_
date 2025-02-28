@@ -40,6 +40,7 @@ fun EventList(navController: NavHostController) {
     var events by remember { mutableStateOf<List<Event>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
+
     LaunchedEffect(Unit) {
         try {
             val snapshot = database.child("events").get().await()
