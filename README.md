@@ -29,8 +29,7 @@ SQL
 ### Contributing
 Contributions are welcome! If you have suggestions or improvements, please fork the repository and submit a pull request.
 
-### License
-MIT
+
 
 Users can see events available 
 
