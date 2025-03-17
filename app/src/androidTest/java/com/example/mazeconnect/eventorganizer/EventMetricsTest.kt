@@ -12,6 +12,8 @@ class EventMetricsTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+
+
     @Test
     fun testEventMetricsScreenUI() {
         val eventName = "Tech Conference"
