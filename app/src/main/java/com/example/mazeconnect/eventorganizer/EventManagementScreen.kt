@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,11 +32,14 @@ data class Event(
     val location: String = "",
     val description: String = ""
 )
+const val LOADING_INDICATOR_TAG = "loading_indicator"
+const val EVENT_MANAGEMENT = "EVENT_MANAGEMENT"
+
 @Composable
-fun EventManagement(navController: NavHostController) {
+fun EventManagement(navController: NavHostController, initialEvents: List<Event> = emptyList()) {
     val database = FirebaseDatabase.getInstance().reference
-    var events by remember { mutableStateOf<List<Event>>(emptyList()) }
-    var isLoading by remember { mutableStateOf(true) }
+    var events by remember { mutableStateOf(initialEvents) } // Use initialEvents properly
+    var isLoading by remember { mutableStateOf(events.isEmpty()) }
 
     LaunchedEffect(Unit) {
         try {
@@ -78,11 +82,11 @@ fun EventManagement(navController: NavHostController) {
                 Text(
                     text = "Event Management",
                     style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(bottom = 24.dp)
+                    modifier = Modifier.padding(bottom = 24.dp).testTag(EVENT_MANAGEMENT)
                 )
 
                 if (isLoading) {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(modifier = Modifier.testTag(LOADING_INDICATOR_TAG))
                 } else if (events.isEmpty()) {
                     Text(
                         text = "No events. Click to create event.",

@@ -50,6 +50,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -97,6 +99,7 @@ dependencies {
      androidTestImplementation ("androidx.navigation:navigation-testing:2.7.5")
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.4")
     debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.4")
+    androidTestImplementation("io.mockk:mockk-android:1.13.7")
 
 
 

@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="testSignUpNavigation()">
+      <SelectionState runConfigName="testLazyRowEventsDisplay()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testEnteringEmailAndPassword()">
+      <SelectionState runConfigName="testCreateNewEventButtonClickable()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="OrgHomePageTest">
+      <SelectionState runConfigName="testCreateEventScreenUI()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="EventMetricsTest">
+      <SelectionState runConfigName="testEventManagementScreenUI()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testEventMetricsScreenUI()">
+      <SelectionState runConfigName="testEventsAreDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
