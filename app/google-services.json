@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "722038888963",
+    "project_id": "mazeconnect-679d0",
+    "storage_bucket": "mazeconnect-679d0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722038888963:android:4d514808f221245bb70c36",
+        "android_client_info": {
+          "package_name": "com.example.mazeconnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAIDX63eaRJ5sXdwZUGnW7fyDSOQJqEoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
