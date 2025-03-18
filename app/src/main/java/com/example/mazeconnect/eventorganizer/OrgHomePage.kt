@@ -30,6 +30,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
@@ -37,6 +38,7 @@ import com.example.mazeconnect.ORG_PROFILE_PIC_URI_KEY
 import com.example.mazeconnect.ProfilePicSharedPrefs
 import com.example.mazeconnect.R
 
+const val EVENT_CARD_TEST_TAG = "EventCard"
 
 @Composable
 fun OrgHomePage(navController: NavHostController) {
@@ -204,7 +206,8 @@ fun EventsCard(title: String) {
         modifier = Modifier
             .padding(8.dp)
             .width(250.dp)
-            .height(200.dp),
+            .height(200.dp)
+            .testTag(EVENT_CARD_TEST_TAG),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {

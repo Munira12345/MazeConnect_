@@ -36,9 +36,15 @@ class OrgHomePageTest {
     }
 
     @Test
+
     fun testLazyRowEventsDisplay() {
-        // If events exist, check the first event is displayed
         composeTestRule.waitForIdle()
+
+
+        composeTestRule.waitUntil(timeoutMillis = 5_000) {
+            composeTestRule.onAllNodesWithTag("EventCard").fetchSemanticsNodes().isNotEmpty()
+        }
+
         val eventNode = composeTestRule.onAllNodesWithTag("EventCard").onFirst()
         eventNode.assertExists()
     }

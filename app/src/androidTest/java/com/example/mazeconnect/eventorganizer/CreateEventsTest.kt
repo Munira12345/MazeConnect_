@@ -45,10 +45,10 @@ class CreateEventsTest {
         composeTestRule.onNodeWithText("Event Category").performTextInput("Networking")
         composeTestRule.onNodeWithText("Price (Enter 'Free' or Amount)").performTextInput("Free")
 
-        // Verify the Save Event button is clickable
+
         composeTestRule.onNodeWithText("Save Event").assertHasClickAction()
 
-        // Click the Save Event button
+
         composeTestRule.onNodeWithText("Save Event").performClick()
     }
 }
