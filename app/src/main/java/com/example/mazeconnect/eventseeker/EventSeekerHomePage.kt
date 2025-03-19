@@ -31,6 +31,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.google.firebase.database.DatabaseReference
@@ -39,6 +40,10 @@ import com.google.firebase.database.ktx.getValue
 import com.example.mazeconnect.EventData
 import com.example.mazeconnect.R
 
+const val BrowseEventsTitle = "BrowseEventsTitle"
+const val buttons = "buttons"
+const val search = "search"
+const val EventCard_1234 = "EventCard_1234"
 
 @Composable
 fun EventSeekerHomePage(navController: NavHostController) {
@@ -86,7 +91,8 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth(0.85f)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color.DarkGray),
+                    .background(Color.DarkGray)
+                    .testTag(search),
                 trailingIcon = {
                     IconButton(onClick = { /* TODO: Handle search */ }) {
                         Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color.White)
@@ -103,13 +109,14 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 modifier = Modifier
                     .padding(bottom = 16.dp)
                     .align(Alignment.CenterHorizontally)
+                    .testTag(BrowseEventsTitle)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Categories
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(buttons),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CategoryButton("Concert", Color(0xFFFFC107))
@@ -167,6 +174,7 @@ fun EventCard(event: EventData, navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .testTag(EventCard_1234)
             .clickable {
                 if (event.id.isBlank()) {
                     Toast.makeText(context, "Event ID not available", Toast.LENGTH_SHORT).show()
