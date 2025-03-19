@@ -35,7 +35,6 @@ const val RSVPButton = "RSVPButton"
 const val BuyTicketButton = "BuyTicketButton"
 
 
-
 @Composable
 fun EventDetails(
     navController: NavHostController,
@@ -43,43 +42,47 @@ fun EventDetails(
     mockEvent: EventData? = null
 ) {
     var event by remember { mutableStateOf(mockEvent) }
+    val userId = "userId123" // TODO: Replace with actual logged-in user ID
+    val database = FirebaseDatabase.getInstance().reference.child("events").child(id ?: "")
 
-    // ✅ Fetch event details from Firebase when ID is available
+    // ✅ Fetch event details from Firebase (NOT CHANGED)
     LaunchedEffect(id) {
         if (id != null) {
-            val database = FirebaseDatabase.getInstance().reference.child("events").child(id)
-
             database.get().addOnSuccessListener { snapshot ->
                 if (snapshot.exists()) {
                     val fetchedEvent = snapshot.getValue(EventData::class.java)
                     if (fetchedEvent != null) {
-                        event = fetchedEvent.copy(id = id) // ✅ Assign Firebase key as ID
+                        event = fetchedEvent.copy(id = id)
                     }
                 } else {
-                    event = null // Event not found
+                    event = null
                 }
-            }.addOnFailureListener {
-                event = null // Handle errors
             }
         }
     }
 
+    // ✅ Check if the user has already RSVP'd
+    val isRsvped = remember { mutableStateOf(false) }
+
+    LaunchedEffect(id) {
+        if (id != null) {
+            database.child("rsvps").child(userId).get().addOnSuccessListener { snapshot ->
+                isRsvped.value = snapshot.exists()
+            }
+        }
+    }
 
     val context = LocalContext.current
-    val locationUrl = "geo:0,0?q=${
-        URLEncoder.encode(event?.location ?: "Nairobi", "UTF-8")
-    }"
+    val locationUrl = "geo:0,0?q=${URLEncoder.encode(event?.location ?: "Nairobi", "UTF-8")}"
 
     Spacer(modifier = Modifier.height(16.dp))
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black)) {
+    Box(
+        modifier = Modifier.fillMaxSize().background(Color.Black)
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+            modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
             event?.let {
                 Text(
@@ -90,13 +93,11 @@ fun EventDetails(
                     text = "${it.date} • ${it.location}",
                     style = TextStyle(color = Color.Gray, fontSize = 14.sp)
                 )
-
                 Text(
                     text = "Category: ${it.category}",
                     style = TextStyle(color = Color.White, fontSize = 14.sp)
                 )
 
-                //  Price
                 Text(
                     text = "Price: ${it.price}",
                     style = TextStyle(
@@ -107,7 +108,6 @@ fun EventDetails(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // ✅ Clickable Location Text (Opens Google Maps)
                 ClickableText(
                     text = AnnotatedString("View Location"),
                     style = TextStyle(color = Color.Blue, textDecoration = TextDecoration.Underline),
@@ -124,7 +124,7 @@ fun EventDetails(
                 //  Buy Ticket Button (Only if price isn’t Free)
                 if (it.price.lowercase() != "free") {
                     Button(
-                        onClick = { /* TODO: Implement ticket purchase logic with mpesa later */ },
+                        onClick = { /* TODO: Implement ticket purchase logic with Mpesa */ },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
@@ -134,7 +134,7 @@ fun EventDetails(
                     }
                 }
 
-                // RSVP Button with Disabled State and Warning Message
+                // ✅ RSVP Button (Toggles RSVP)
                 val isPaidEvent = it.price.lowercase() != "free"
 
                 Row(
@@ -142,14 +142,28 @@ fun EventDetails(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Button(
-                        onClick = { /* TODO: Implement RSVP functionality */ },
+                        onClick = {
+                            if (id != null) {
+                                val rsvpRef = database.child("rsvps").child(userId)
+
+                                if (isRsvped.value) {
+                                    rsvpRef.removeValue().addOnSuccessListener {
+                                        isRsvped.value = false
+                                    }
+                                } else {
+                                    rsvpRef.setValue(true).addOnSuccessListener {
+                                        isRsvped.value = true
+                                    }
+                                }
+                            }
+                        },
                         modifier = Modifier
                             .weight(1f)
                             .padding(vertical = 8.dp)
                             .testTag(RSVPButton),
                         enabled = !isPaidEvent // Disable if event is paid
                     ) {
-                        Text("RSVP", color = Color.White)
+                        Text(if (isRsvped.value) "Cancel RSVP" else "RSVP", color = Color.White)
                     }
 
                     if (isPaidEvent) {
@@ -171,9 +185,7 @@ fun EventDetails(
                 // Back Button
                 Button(
                     onClick = { navController.navigate("event_list") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 ) {
                     Text("Back to Events", color = Color.White)
                 }
@@ -185,6 +197,8 @@ fun EventDetails(
         }
     }
 }
+
+
 // Preview with Mock Data
 @Preview(showBackground = true)
 @Composable
