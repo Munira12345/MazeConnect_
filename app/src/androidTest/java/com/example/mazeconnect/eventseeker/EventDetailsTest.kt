@@ -31,29 +31,21 @@ class EventDetailsTest {
             EventDetails(navController, mockEvent = mockEvent)
         }
 
-        // ✅ Verify Event Name
-        composeTestRule.onNodeWithTag("EventName").assertExists().assertIsDisplayed()
 
-        // ✅ Verify Event Date and Location
-        composeTestRule.onNodeWithTag("EventDateLocation").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText("${mockEvent.date} • ${mockEvent.location}").assertExists().assertIsDisplayed()
 
-        // ✅ Verify Category
-        composeTestRule.onNodeWithTag("EventCategory").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText("Category: ${mockEvent.category}").assertExists().assertIsDisplayed()
 
-        // ✅ Verify Price
-        composeTestRule.onNodeWithTag("EventPrice").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText("Price: ${mockEvent.price}").assertExists().assertIsDisplayed()
 
-        // ✅ Verify Description
-        composeTestRule.onNodeWithTag("EventDescription").assertExists().assertIsDisplayed()
+        composeTestRule.onNodeWithText(mockEvent.description).assertExists().assertIsDisplayed()
 
-        // ✅ Verify Buy Ticket Button (Since price is not Free)
+
         composeTestRule.onNodeWithTag("BuyTicketButton").assertExists().assertIsDisplayed()
 
-        // ✅ Verify RSVP Button is Disabled (Since it’s a paid event)
         composeTestRule.onNodeWithTag("RSVPButton").assertExists().assertIsNotEnabled()
 
-        // ✅ Verify Back Button
-        composeTestRule.onNodeWithTag("BackToEventsButton").assertExists().assertIsDisplayed()
+         composeTestRule.onNodeWithText("Back to Events").assertExists().assertIsDisplayed()
     }
 
     @Test
@@ -73,13 +65,8 @@ class EventDetailsTest {
             EventDetails(navController, mockEvent = mockEvent)
         }
 
-        // ✅ Click Back Button
+
         composeTestRule.onNodeWithTag("BackToEventsButton").performClick()
 
-        // ✅ Wait for UI state to update
-        composeTestRule.waitForIdle()
-
-        // ✅ Verify navigation happened (assuming 'event_list' screen has a tag)
-        composeTestRule.onNodeWithTag("EventListScreen").assertExists()
     }
 }

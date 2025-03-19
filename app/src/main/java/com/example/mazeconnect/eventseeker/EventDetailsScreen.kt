@@ -25,10 +25,17 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 
 
 import com.google.firebase.database.FirebaseDatabase
+
+const val RSVPButton = "RSVPButton"
+const val BuyTicketButton = "BuyTicketButton"
+
+
+
 @Composable
 fun EventDetails(
     navController: NavHostController,
@@ -64,11 +71,15 @@ fun EventDetails(
     }"
 
     Spacer(modifier = Modifier.height(16.dp))
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             event?.let {
                 Text(
@@ -114,7 +125,10 @@ fun EventDetails(
                 if (it.price.lowercase() != "free") {
                     Button(
                         onClick = { /* TODO: Implement ticket purchase logic with mpesa later */ },
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .testTag(BuyTicketButton)
                     ) {
                         Text("Buy Ticket", color = Color.White)
                     }
@@ -129,7 +143,10 @@ fun EventDetails(
                 ) {
                     Button(
                         onClick = { /* TODO: Implement RSVP functionality */ },
-                        modifier = Modifier.weight(1f).padding(vertical = 8.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(vertical = 8.dp)
+                            .testTag(RSVPButton),
                         enabled = !isPaidEvent // Disable if event is paid
                     ) {
                         Text("RSVP", color = Color.White)
@@ -154,7 +171,9 @@ fun EventDetails(
                 // Back Button
                 Button(
                     onClick = { navController.navigate("event_list") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
                 ) {
                     Text("Back to Events", color = Color.White)
                 }
