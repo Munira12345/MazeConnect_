@@ -20,7 +20,7 @@ class EventSeekerHomePageTest {
             val navController = rememberNavController()
             EventSeekerHomePage(navController)
         }
-
+        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("search").assertExists().assertIsDisplayed()
 
