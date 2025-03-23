@@ -100,6 +100,7 @@ dependencies {
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.4")
     debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.4")
     androidTestImplementation("io.mockk:mockk-android:1.13.7")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
 
 
 

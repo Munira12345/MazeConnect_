@@ -39,6 +39,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
 import com.example.mazeconnect.EventData
 import com.example.mazeconnect.R
+import com.example.mazeconnect.utils.getWindowSize
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+
 
 const val BrowseEventsTitle = "BrowseEventsTitle"
 const val buttons = "buttons"
@@ -47,6 +50,14 @@ const val EventCard_1234 = "EventCard_1234"
 
 @Composable
 fun EventSeekerHomePage(navController: NavHostController) {
+    val windowSize = getWindowSize()
+
+    when (windowSize.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> PhoneLayout(navController)
+        WindowWidthSizeClass.Medium -> FoldableLayout(navController)
+        WindowWidthSizeClass.Expanded -> TabletLayout(navController)
+    }
+
     var profileImageUrl by remember { mutableStateOf("") }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { profileImageUrl = it.toString() }
@@ -163,6 +174,30 @@ fun EventSeekerHomePage(navController: NavHostController) {
             verticalArrangement = Arrangement.Bottom
         ) {
             EventSeekerBottomNavigation(navController)
+        }
+    }
+}
+@Composable
+fun PhoneLayout(navController: NavHostController) {
+    //  content of `EventSeekerHomePage
+}
+@Composable
+fun FoldableLayout(navController: NavHostController) {
+    Column {
+        Row {
+            Text("This is a foldable layout!", color = Color.White, fontSize = 24.sp)
+        }
+        PhoneLayout(navController) //  phone layout but adjust spacing if needed
+    }
+}
+@Composable
+fun TabletLayout(navController: NavHostController) {
+    Row(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text("Left Pane", color = Color.White, fontSize = 24.sp)
+        }
+        Column(modifier = Modifier.weight(2f)) {
+            PhoneLayout(navController) // Main content
         }
     }
 }
