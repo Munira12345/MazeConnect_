@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
-
+    id ("com.google.firebase.crashlytics")
 
 }
 
@@ -80,7 +80,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.firebase:firebase-crashlytics-ktx")
+    implementation ("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
     implementation ("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.compose.material3:material3:1.1.0")
@@ -101,6 +102,7 @@ dependencies {
     debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.4")
     androidTestImplementation("io.mockk:mockk-android:1.13.7")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+
 
 
 
