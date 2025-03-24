@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.mazeconnect.R
 import androidx.compose.foundation.Image
 //import androidx.compose.ui.Alignment
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,18 +111,21 @@ fun SignInScreen(navController: NavHostController) {
                             firebaseAuth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        // Navigate to the home screen after successful sign-in
                                         navController.navigate("event_roles")
                                     } else {
-                                        // Display error message if sign-in fails
                                         val exception = task.exception
                                         errorMessage = exception?.message ?: "Sign In failed"
+
+                                        // non-fatal exception for Firebase Crashlytics
+                                        exception?.let {
+                                            FirebaseCrashlytics.getInstance().recordException(it)
+                                        }
                                     }
                                 }
                         } else {
                             errorMessage = "Please fill in all fields"
                         }
-                },
+                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = email.isNotBlank() && password.isNotBlank()
             ) {
