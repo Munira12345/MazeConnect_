@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.androidx.navigation.testing)
+    implementation(libs.androidx.biometric.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -102,6 +103,8 @@ dependencies {
     debugImplementation ("androidx.compose.ui:ui-test-manifest:1.5.4")
     androidTestImplementation("io.mockk:mockk-android:1.13.7")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
+    implementation ("androidx.biometric:biometric:1.2.0-alpha05")
+
 
 
 

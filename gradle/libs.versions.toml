@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+biometric = "1.2.0"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -13,8 +14,10 @@ firebaseDatabase = "21.0.0"
 firebaseFirestore = "25.1.2"
 firebaseStorage = "21.0.1"
 navigationTesting = "2.8.9"
+biometricKtx = "1.1.0"
 
 [libraries]
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -34,6 +37,7 @@ firebase-database = { group = "com.google.firebase", name = "firebase-database",
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
+androidx-biometric-ktx = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometricKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
