@@ -53,6 +53,15 @@ Event Organizers homepage
 
 
 
+Role selection
+
+
+![WhatsApp Image 2025-03-29 at 00 08 41_c8c0073e](https://github.com/user-attachments/assets/62059b71-9b1c-4f79-899a-8c3358278cfb)
+
+
+
+
+
 Users can search for the events, connect to uber, Bolt or just Google Maps for directions 
 
 
