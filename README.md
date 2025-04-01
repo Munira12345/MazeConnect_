@@ -34,7 +34,9 @@ Contributions are welcome! If you have suggestions or improvements, please fork 
 Users can see events available 
 
 
-![WhatsApp Image 2025-02-14 at 10 04 28_035fab07](https://github.com/user-attachments/assets/be5571f5-13d9-4e9e-84f1-b3ae3dba35bf)
+
+![WhatsApp Image 2025-04-01 at 16 11 22_259c440b](https://github.com/user-attachments/assets/1782ce29-6239-4cf4-a498-d52f421483af)
+
 
 
 
