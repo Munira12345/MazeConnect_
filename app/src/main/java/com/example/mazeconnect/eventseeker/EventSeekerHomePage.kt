@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,33 +16,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.mazeconnect.components.EventSeekerBottomNavigation
-//import com.example.mazeconnect.ui.theme.MazeConnectTheme
+import com.example.mazeconnect.utils.getWindowSize
+import com.example.mazeconnect.R
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.getValue
-import com.example.mazeconnect.EventData
-import com.example.mazeconnect.R
-import com.example.mazeconnect.utils.getWindowSize
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.mazeconnect.EventData
 
 const val BrowseEventsTitle = "BrowseEventsTitle"
 const val buttons = "buttons"
@@ -65,7 +63,7 @@ fun EventSeekerHomePage(navController: NavHostController) {
 
     val events = remember { mutableStateListOf<EventData>() }
 
-    // Fetch events from Firebase Realtime Database
+    // events from Firebase Realtime Database
     val database: DatabaseReference = FirebaseDatabase.getInstance().reference.child("events")
     LaunchedEffect(Unit) {
         database.get().addOnSuccessListener { snapshot ->
@@ -81,20 +79,40 @@ fun EventSeekerHomePage(navController: NavHostController) {
         }
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // Main content
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .align(Alignment.TopCenter)
+                .align(Alignment.TopCenter),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Move profile picture down and center it
+            IconButton(
+                onClick = { imagePicker.launch("image/*") },
+                modifier = Modifier.size(50.dp) // Slightly larger
+            ) {
+                if (profileImageUrl.isNotEmpty()) {
+                    Image(
+                        painter = rememberAsyncImagePainter(profileImageUrl),
+                        contentDescription = "User Profile",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(25.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(Icons.Filled.AccountCircle, "User Profile", tint = Color.White, modifier = Modifier.size(50.dp))
+                }
+            }
 
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Search pending
             TextField(
                 value = "",
                 onValueChange = {},
@@ -111,9 +129,9 @@ fun EventSeekerHomePage(navController: NavHostController) {
                 }
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Browse events
+            // Browse events titles pending
             Text(
                 "Browse events",
                 style = TextStyle(color = Color.White, fontSize = 24.sp),
@@ -127,7 +145,9 @@ fun EventSeekerHomePage(navController: NavHostController) {
 
             // Categories
             Row(
-                modifier = Modifier.fillMaxWidth().testTag(buttons),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(buttons),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CategoryButton("Concert", Color(0xFFFFC107))
@@ -147,27 +167,6 @@ fun EventSeekerHomePage(navController: NavHostController) {
             }
         }
 
-        // Top-right Profile Icon
-        IconButton(
-            onClick = { imagePicker.launch("image/*") },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-        ) {
-            if (profileImageUrl.isNotEmpty()) {
-                Image(
-                    painter = rememberAsyncImagePainter(profileImageUrl),
-                    contentDescription = "User Profile",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(20.dp)),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Icon(Icons.Filled.AccountCircle, "User Profile", tint = Color.White)
-            }
-        }
-
         // Bottom Navigation
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -177,19 +176,22 @@ fun EventSeekerHomePage(navController: NavHostController) {
         }
     }
 }
+
 @Composable
 fun PhoneLayout(navController: NavHostController) {
-    //  content of `EventSeekerHomePage
+    //  content of `EventSeekerHomePage`
 }
+
 @Composable
 fun FoldableLayout(navController: NavHostController) {
     Column {
         Row {
             Text("This is a foldable layout!", color = Color.White, fontSize = 24.sp)
         }
-        PhoneLayout(navController) //  phone layout but adjust spacing if needed
+        PhoneLayout(navController)
     }
 }
+
 @Composable
 fun TabletLayout(navController: NavHostController) {
     Row(modifier = Modifier.fillMaxSize()) {
@@ -219,7 +221,6 @@ fun EventCard(event: EventData, navController: NavController) {
                     navController.navigate("event_details/${event.id}")
                 }
             },
-
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
@@ -248,7 +249,6 @@ fun EventCard(event: EventData, navController: NavController) {
         }
     }
 }
-
 
 @Composable
 fun CategoryButton(label: String, backgroundColor: Color) {
