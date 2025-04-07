@@ -103,7 +103,8 @@ dependencies {
     androidTestImplementation("io.mockk:mockk-android:1.13.7")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
     implementation ("androidx.biometric:biometric:1.2.0-alpha05")
-
+    implementation ("io.coil-kt:coil-compose:2.1.0")
+    implementation ("io.coil-kt:coil-svg:2.1.0")
 
 
 

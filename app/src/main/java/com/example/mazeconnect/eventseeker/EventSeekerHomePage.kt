@@ -40,6 +40,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mazeconnect.EventData
+import coil.compose.rememberAsyncImagePainter
 
 const val BrowseEventsTitle = "BrowseEventsTitle"
 const val buttons = "buttons"
@@ -246,6 +247,37 @@ fun EventCard(event: EventData, navController: NavController) {
                     .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             )
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+              /*  Icon(
+                    painter = painterResource(id = R.drawable.ins),
+                    contentDescription = "Share on WhatsApp",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { /* TODO: Share logic */ }
+                )*/
+                Icon(
+                    painter = rememberAsyncImagePainter(R.drawable.fb),
+                    contentDescription = "Share on Instagram",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { /* TODO: Share logic */ }
+                )
+                Icon(
+                    painter = rememberAsyncImagePainter(R.drawable.whats),
+                    contentDescription = "Share on Facebook",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { /* TODO: Share logic */ }
+                )
+            }
         }
     }
 }
