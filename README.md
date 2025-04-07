@@ -35,7 +35,8 @@ Users can see events available
 
 
 
-![WhatsApp Image 2025-04-01 at 16 11 22_259c440b](https://github.com/user-attachments/assets/1782ce29-6239-4cf4-a498-d52f421483af)
+
+![WhatsApp Image 2025-04-07 at 12 25 25_8abc83ac](https://github.com/user-attachments/assets/183d0075-05be-4083-ac33-b8c648e6ef25)
 
 
 
