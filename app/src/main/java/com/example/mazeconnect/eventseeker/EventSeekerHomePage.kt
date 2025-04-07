@@ -1,5 +1,6 @@
 package com.example.mazeconnect.eventseeker
 
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -41,6 +42,9 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mazeconnect.EventData
 import coil.compose.rememberAsyncImagePainter
+import android.content.Context
+import android.content.pm.PackageManager
+
 
 const val BrowseEventsTitle = "BrowseEventsTitle"
 const val buttons = "buttons"
@@ -253,9 +257,18 @@ fun EventCard(event: EventData, navController: NavController) {
                     .padding(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-              /*  Icon(
-                    painter = painterResource(id = R.drawable.ins),
+               Icon(
+                    painter = painterResource(id = R.drawable.whats),
                     contentDescription = "Share on WhatsApp",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { shareToWhatsApp(context, event) }
+
+                )
+               /* Icon(
+                    painter = rememberAsyncImagePainter(R.drawable.ins),
+                    contentDescription = "Share on Instagram",
                     tint = Color.Unspecified,
                     modifier = Modifier
                         .size(24.dp)
@@ -263,14 +276,6 @@ fun EventCard(event: EventData, navController: NavController) {
                 )*/
                 Icon(
                     painter = rememberAsyncImagePainter(R.drawable.fb),
-                    contentDescription = "Share on Instagram",
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { /* TODO: Share logic */ }
-                )
-                Icon(
-                    painter = rememberAsyncImagePainter(R.drawable.whats),
                     contentDescription = "Share on Facebook",
                     tint = Color.Unspecified,
                     modifier = Modifier
@@ -279,6 +284,35 @@ fun EventCard(event: EventData, navController: NavController) {
                 )
             }
         }
+    }
+}
+fun shareToWhatsApp(context: Context, event: EventData) {
+    try {
+        //  intent to open WhatsApp
+        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, "Check out this event: ${event.name}")
+        }
+
+        //  if WhatsApp is installed
+        val packageManager: PackageManager = context.packageManager
+        val whatsappIntent: Intent? = sendIntent.resolveActivity(packageManager)?.let {
+            Intent(Intent.ACTION_SEND).apply {
+                putExtra(Intent.EXTRA_TEXT, "Check out this event: ${event.name}")
+                setPackage("com.whatsapp")
+                type = "text/plain"
+            }
+        }
+
+        // If WhatsApp installed, start  intent
+        if (whatsappIntent != null) {
+            context.startActivity(whatsappIntent)
+        } else {
+            Toast.makeText(context, "WhatsApp not installed", Toast.LENGTH_SHORT).show()
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Toast.makeText(context, "Error sharing to WhatsApp", Toast.LENGTH_SHORT).show()
     }
 }
 
