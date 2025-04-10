@@ -45,7 +45,6 @@ fun EventDetails(
     val userId = "userId123" // TODO: Replace with actual logged-in user ID
     val database = FirebaseDatabase.getInstance().reference.child("events").child(id ?: "")
 
-    // ✅ Fetch event details from Firebase (NOT CHANGED)
     LaunchedEffect(id) {
         if (id != null) {
             database.get().addOnSuccessListener { snapshot ->
@@ -61,7 +60,6 @@ fun EventDetails(
         }
     }
 
-    // ✅ Check if the user has already RSVP'd
     val isRsvped = remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
@@ -77,12 +75,16 @@ fun EventDetails(
 
     Spacer(modifier = Modifier.height(16.dp))
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             event?.let {
                 Text(
@@ -97,11 +99,10 @@ fun EventDetails(
                     text = "Category: ${it.category}",
                     style = TextStyle(color = Color.White, fontSize = 14.sp)
                 )
-
                 Text(
                     text = "Price: ${it.price}",
                     style = TextStyle(
-                        color = if (it.price == "Free") Color.Green else Color.Yellow,
+                        color = if (it.price.lowercase() == "free") Color.Green else Color.Yellow,
                         fontSize = 14.sp
                     )
                 )
@@ -121,10 +122,9 @@ fun EventDetails(
 
                 Text(text = it.description, style = TextStyle(color = Color.White, fontSize = 14.sp))
 
-                //  Buy Ticket Button (Only if price isn’t Free)
                 if (it.price.lowercase() != "free") {
                     Button(
-                        onClick = { /* TODO: Implement ticket purchase logic with Mpesa */ },
+                        onClick = { /* TODO: Payment logic */ },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
@@ -134,9 +134,7 @@ fun EventDetails(
                     }
                 }
 
-                // ✅ RSVP Button (Toggles RSVP)
-                val isPaidEvent = it.price.lowercase() != "free"
-
+                // RSVP
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
@@ -160,32 +158,17 @@ fun EventDetails(
                         modifier = Modifier
                             .weight(1f)
                             .padding(vertical = 8.dp)
-                            .testTag(RSVPButton),
-                        enabled = !isPaidEvent // Disable if event is paid
+                            .testTag(RSVPButton)
                     ) {
                         Text(if (isRsvped.value) "Cancel RSVP" else "RSVP", color = Color.White)
                     }
-
-                    if (isPaidEvent) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Image(
-                            painter = painterResource(id = R.drawable.stop),
-                            contentDescription = "Paid Event",
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "This is a paid event. Buy a ticket first.",
-                            color = Color.Red,
-                            fontSize = 12.sp
-                        )
-                    }
                 }
 
-                // Back Button
                 Button(
                     onClick = { navController.navigate("event_list") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
                 ) {
                     Text("Back to Events", color = Color.White)
                 }
