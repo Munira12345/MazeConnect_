@@ -9,5 +9,6 @@ data class EventData(
     val ticketPrice: String = "",
     val category: String = "",
     val price: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val organizerId: String? = null
 )

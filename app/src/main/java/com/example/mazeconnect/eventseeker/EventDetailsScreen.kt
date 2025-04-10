@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import com.google.firebase.auth.FirebaseAuth
 
 
 import com.google.firebase.database.FirebaseDatabase
@@ -141,8 +142,10 @@ fun EventDetails(
                 ) {
                     Button(
                         onClick = {
+                            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
+
                             if (id != null) {
-                                val rsvpRef = database.child("rsvps").child(userId)
+                                val rsvpRef = database.child("rsvps").child(currentUserId)
 
                                 if (isRsvped.value) {
                                     rsvpRef.removeValue().addOnSuccessListener {
@@ -151,6 +154,22 @@ fun EventDetails(
                                 } else {
                                     rsvpRef.setValue(true).addOnSuccessListener {
                                         isRsvped.value = true
+
+                                        // ✅ STEP 1: Send notification to organizer
+                                        val organizerId = event?.organizerId ?: return@addOnSuccessListener
+                                        val notificationRef = FirebaseDatabase.getInstance().reference
+                                            .child("notifications")
+                                            .child(organizerId)
+                                            .push()
+
+                                        val notification = mapOf(
+                                            "title" to "New RSVP",
+                                            "message" to "Someone just RSVPed to your event '${event?.name}'!",
+                                            "eventId" to id,
+                                            "timestamp" to System.currentTimeMillis()
+                                        )
+
+                                        notificationRef.setValue(notification)
                                     }
                                 }
                             }

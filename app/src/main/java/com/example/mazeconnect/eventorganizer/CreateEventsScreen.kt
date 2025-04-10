@@ -22,6 +22,7 @@ import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import com.example.mazeconnect.components.BottomNavigationBar // BottomNavigationBar component
 import com.google.firebase.database.FirebaseDatabase
 import com.example.mazeconnect.components.ReusableOutlinedButton
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun CreateEvents(navController: NavHostController) {
@@ -147,13 +148,16 @@ fun saveEventToRealtimeDatabase(
     val database = FirebaseDatabase.getInstance().reference
     val eventId = database.child("events").push().key
 
+    val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: "unknown"
+
     val event = hashMapOf(
         "name" to name,
         "date" to date,
         "location" to location,
         "description" to description,
         "category" to category,
-        "price" to price
+        "price" to price,
+        "organizerId" to currentUserId
     )
 
     eventId?.let {
