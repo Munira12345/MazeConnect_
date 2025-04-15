@@ -40,13 +40,25 @@ fun EventManagement(navController: NavHostController, initialEvents: List<Event>
     val database = FirebaseDatabase.getInstance().reference
     var events by remember { mutableStateOf(initialEvents) } // Use initialEvents properly
     var isLoading by remember { mutableStateOf(events.isEmpty()) }
+    var rsvpCounts by remember { mutableStateOf<Map<String, Int>>(emptyMap()) }
+
 
     LaunchedEffect(Unit) {
         try {
             val snapshot = database.child("events").get().await()
-            events = snapshot.children.mapNotNull { child ->
+            val loadedEvents = snapshot.children.mapNotNull { child ->
                 child.getValue(Event::class.java)?.copy(id = child.key ?: "")
             }
+            events = loadedEvents
+
+            // Fetch RSVP counts for each event
+            val rsvpMap = mutableMapOf<String, Int>()
+            loadedEvents.forEach { event ->
+                val rsvpSnapshot = database.child("events").child(event.id).child("rsvps").get().await()
+                rsvpMap[event.id] = rsvpSnapshot.childrenCount.toInt()
+            }
+            rsvpCounts = rsvpMap
+
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -100,7 +112,8 @@ fun EventManagement(navController: NavHostController, initialEvents: List<Event>
                 } else {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         items(events) { event ->
-                            EventManagementItem(event, onDelete = { deleteEvent(event.id) })
+                            val count = rsvpCounts[event.id] ?: 0
+                            EventManagementItem(event, count, onDelete = { deleteEvent(event.id) })
                         }
                     }
                 }
@@ -110,34 +123,40 @@ fun EventManagement(navController: NavHostController, initialEvents: List<Event>
 }
 
 @Composable
-fun EventManagementItem(event: Event, onDelete: () -> Unit) {
+fun EventManagementItem(event: Event, rsvpCount: Int, onDelete: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = event.name,
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.bodyLarge
-            )
-            IconButton(onClick = onDelete) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Event",
-                    tint = Color.Red
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = event.name,
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyLarge
                 )
+                IconButton(onClick = onDelete) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete Event",
+                        tint = Color.Red
+                    )
+                }
             }
+            Text(
+                text = "RSVPs: $rsvpCount",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
         }
     }
 }
+
 
 
 @Preview(showBackground = true)
