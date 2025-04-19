@@ -36,6 +36,7 @@ const val RSVPButton = "RSVPButton"
 const val BuyTicketButton = "BuyTicketButton"
 
 
+
 @Composable
 fun EventDetails(
     navController: NavHostController,
