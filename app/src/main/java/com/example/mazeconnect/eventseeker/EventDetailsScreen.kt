@@ -62,6 +62,7 @@ fun EventDetails(
         }
     }
 
+
     val isRsvped = remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
