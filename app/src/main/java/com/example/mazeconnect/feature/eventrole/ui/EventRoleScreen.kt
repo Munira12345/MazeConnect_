@@ -1,6 +1,5 @@
-package com.example.mazeconnect.common
+package com.example.mazeconnect.feature.eventrole.ui
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -8,30 +7,58 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import com.example.mazeconnect.R
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.mazeconnect.SharedPrefsUtils
+import com.example.mazeconnect.feature.eventrole.viewmodel.EventRoleViewModel
+import com.example.mazeconnect.feature.eventrole.viewmodel.RoleState
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun EventRoleScreen(navController: NavHostController) {
+fun EventRoleScreen(
+    navController: NavHostController,
+    viewModel: EventRoleViewModel = viewModel()
+) {
     val context = LocalContext.current
-    val db = FirebaseFirestore.getInstance()
+    val roleState by viewModel.roleState.collectAsState()
     val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+
+    LaunchedEffect(roleState) {
+        when (roleState) {
+            is RoleState.Success -> {
+                val role = (roleState as RoleState.Success).role
+                SharedPrefsUtils.saveRole(context, role)
+                val destination = if (role == "EventSeeker") "event_seeker_home" else "event_organizer_home"
+                navController.navigate(destination) {
+                    popUpTo("event_roles") { inclusive = true }
+                }
+            }
+
+            is RoleState.Error -> {
+                Toast.makeText(
+                    context,
+                    (roleState as RoleState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            else -> Unit
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -60,7 +87,8 @@ fun EventRoleScreen(navController: NavHostController) {
                 icon = R.drawable.upcomingevents,
                 borderColor = Color(0xFF6A0DAD),
                 onClick = {
-                    saveRoleAndNavigate("EventSeeker", userId, db, context, navController)
+                    if (userId != null) viewModel.saveUserRole(context, "EventSeeker")
+
                 }
             )
 
@@ -72,7 +100,8 @@ fun EventRoleScreen(navController: NavHostController) {
                 icon = R.drawable.pastevents,
                 borderColor = Color(0xFF008080),
                 onClick = {
-                    saveRoleAndNavigate("EventOrganizer", userId, db, context, navController)
+                    if (userId != null) viewModel.saveUserRole(context, "EventOrganizer")
+
                 }
             )
         }
@@ -80,7 +109,13 @@ fun EventRoleScreen(navController: NavHostController) {
 }
 
 @Composable
-fun RoleCard(title: String, description: String, icon: Int, borderColor: Color, onClick: () -> Unit) {
+fun RoleCard(
+    title: String,
+    description: String,
+    icon: Int,
+    borderColor: Color,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,7 +125,6 @@ fun RoleCard(title: String, description: String, icon: Int, borderColor: Color, 
             .background(Color.DarkGray),
         colors = CardDefaults.cardColors(containerColor = Color.DarkGray),
         border = BorderStroke(2.dp, borderColor)
-
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -102,45 +136,11 @@ fun RoleCard(title: String, description: String, icon: Int, borderColor: Color, 
                 tint = borderColor,
                 modifier = Modifier.size(48.dp)
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column {
                 Text(text = title, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                 Text(text = description, color = Color.Gray, fontSize = 14.sp)
             }
         }
     }
-}
-
-fun saveRoleAndNavigate(
-    role: String,
-    userId: String?,
-    db: FirebaseFirestore,
-    context: Context,
-    navController: NavHostController
-) {
-    if (userId != null) {
-        db.collection("users").document(userId)
-            .set(mapOf("role" to role))
-            .addOnSuccessListener {
-                SharedPrefsUtils.saveRole(context, role)
-                val destination = if (role == "EventSeeker") "event_seeker_home" else "event_organizer_home"
-                navController.navigate(destination) {
-                    popUpTo("event_roles") { inclusive = true }
-                }
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Error saving role: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-    } else {
-        Toast.makeText(context, "User not authenticated!", Toast.LENGTH_SHORT).show()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewEventRoleScreen() {
-    val navController = rememberNavController()
-    EventRoleScreen(navController)
 }

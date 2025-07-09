@@ -16,7 +16,7 @@ import com.example.mazeconnect.ui.theme.MazeConnectTheme
 import com.google.firebase.FirebaseApp
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.example.mazeconnect.common.EventRoleScreen
+import com.example.mazeconnect.feature.eventrole.ui.EventRoleScreen
 import com.example.mazeconnect.common.SignInScreen
 import com.example.mazeconnect.common.SignUpScreen
 import com.example.mazeconnect.common.SplashScreen
