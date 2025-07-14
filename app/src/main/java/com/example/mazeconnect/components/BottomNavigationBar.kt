@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.navigation.NavHostController
 
+
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     NavigationBar(
