@@ -13,6 +13,7 @@ animationCoreLint = "1.8.0-alpha07"
 firebaseDatabase = "21.0.0"
 firebaseFirestore = "25.1.2"
 firebaseStorage = "21.0.1"
+mockk = "1.13.8"
 navigationTesting = "2.8.9"
 biometricKtx = "1.1.0"
 
@@ -38,6 +39,7 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 androidx-biometric-ktx = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometricKtx" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

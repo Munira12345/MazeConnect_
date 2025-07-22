@@ -111,7 +111,8 @@ dependencies {
 // JUnit
     testImplementation ("junit:junit:4.13.2")
 // MockK for mocking FirebaseAuth & repository
-    testImplementation ("io.mockk:mockk:1.13.8")
+    testImplementation("io.mockk:mockk:1.13.8")
+
 // Turbine to test Kotlin Flow emissions
     testImplementation ("app.cash.turbine:turbine:1.1.0")
 

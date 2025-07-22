@@ -15,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -73,10 +74,10 @@ fun authenticateWithBiometrics(activity: FragmentActivity, navController: NavHos
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInScreen(navController: NavHostController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var showPassword by rememberSaveable { mutableStateOf(false) }
+    var errorMessage by rememberSaveable { mutableStateOf("") }
     val firebaseAuth = FirebaseAuth.getInstance()
     val context = LocalContext.current
 
