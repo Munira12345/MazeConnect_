@@ -24,7 +24,6 @@ import com.example.mazeconnect.R
 import com.example.mazeconnect.ui.theme.MazeConnectTheme
 
 
-
 @Composable
 fun SplashScreen(navController: NavController) {
     val colors = listOf(Color.Black, Color(0xFF6A0DAD)) // Black to purple gradient
